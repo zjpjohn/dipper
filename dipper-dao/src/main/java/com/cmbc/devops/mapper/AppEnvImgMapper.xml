@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.AppEnvImgMapper">
+	<resultMap id="BaseResultMap" type="com.cmbc.devops.entity.AppEnvImg">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="APP_ID" property="appId" jdbcType="INTEGER" />
+		<result column="ENV_ID" property="envId" jdbcType="INTEGER" />
+		<result column="IMG_ID" property="imgId" jdbcType="INTEGER" />
+		<result column="ENV_NAME" property="envName" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, APP_ID, ENV_ID, IMG_ID
+	</sql>
+
+	<!--(1) 根据记录的ID查询 -->
+	<select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from dop_appenv_img
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!--(2)根据应用的ID获取全部记录 -->
+	<select id="selectAllByAppId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from dop_appenv_img where APP_ID = #{appId,jdbcType=INTEGER}
+	</select>
+
+	<!--(3) 根据环境的ID获取全部记录 -->
+	<select id="selectAllByEnvId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from dop_appenv_img
+		where ENV_ID = #{envId,jdbcType=INTEGER}
+	</select>
+	
+	<!--根据镜像的ID获取全部记录 -->
+	<select id="selectAllByImgId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		aei.ID, aei.APP_ID, aei.ENV_ID, aei.IMG_ID,env.ENV_NAME
+		from dop_appenv_img aei,dop_env env
+		where aei.ENV_ID=env.ENV_ID 
+		AND aei.IMG_ID=#{imgId,jdbcType=INTEGER}
+	</select>
+	
+	<!--根据镜像的ID和应用id获取应用版本实例数和所在环境 -->
+	<select id="listByAppIdAndImageId" resultMap="BaseResultMap"
+		parameterType="com.cmbc.devops.entity.AppEnvImg">
+		select
+		aei.ID, aei.APP_ID, aei.ENV_ID, aei.IMG_ID,env.ENV_NAME
+		from dop_appenv_img aei,dop_env env
+		where aei.APP_ID=#{appId,jdbcType=INTEGER} AND aei.ENV_ID=env.ENV_ID 
+		AND aei.IMG_ID=#{imgId,jdbcType=INTEGER}
+	</select>
+
+	<!-- 批量插入(应用-环境-镜像)记录 -->
+	<insert id="batchInsertAEIs" parameterType="java.util.List" useGeneratedKeys="true">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dop_appenv_img (APP_ID, ENV_ID, IMG_ID) values
+		<foreach collection="list" index="index" item="item"
+			separator=",">
+			(#{item.appId},
+			#{item.envId},
+			#{item.imgId})
+		</foreach>
+	</insert>
+
+	<!--(4) 根据应用ID删除全部记录 -->
+	<delete id="deleteByAppId" parameterType="java.lang.Integer">
+		delete from
+		dop_appenv_img
+		where
+		APP_ID = #{appId,jdbcType=INTEGER}
+	</delete>
+
+	<!--根据应用ID和镜像id删除全部记录 -->
+	<delete id="deleteById" parameterType="com.cmbc.devops.entity.AppEnvImg">
+		delete from
+		dop_appenv_img
+		where
+		APP_ID = #{appId,jdbcType=INTEGER}
+		AND IMG_ID = #{imgId,jdbcType=INTEGER}
+	</delete>
+	
+	<!--(5) 根据环境ID删除全部记录 -->
+	<delete id="deleteByEnvId" parameterType="java.lang.Integer">
+		delete from
+		dop_appenv_img
+		where
+		ENV_ID = #{appId,jdbcType=INTEGER}
+	</delete>
+
+	<!--(6) 根据环境ID删除全部记录 -->
+	<delete id="deleteByImgId" parameterType="java.lang.Integer">
+		delete from
+		dop_appenv_img
+		where
+		IMG_ID = #{imgId,jdbcType=INTEGER}
+	</delete>
+
+	<!--(7) 插入新的记录 -->
+	<insert id="insert" parameterType="com.cmbc.devops.entity.AppEnvImg" useGeneratedKeys="true" keyProperty="id">
+		insert into dop_appenv_img
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="appId != null ">
+				APP_ID,
+			</if>
+			<if test="envId != null ">
+				ENV_ID,
+			</if>
+			<if test="imgId != null ">
+				IMG_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="appId != null ">
+				#{appId,jdbcType=INTEGER},
+			</if>
+			<if test="envId != null ">
+				#{envId,jdbcType=INTEGER},
+			</if>
+			<if test="imgId != null ">
+				#{imgId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<!--(8) 更新记录 -->
+	<update id="update" parameterType="com.cmbc.devops.entity.AppEnvImg">
+		update dop_appenv_img
+		<set>
+			<if test="appId != null ">
+				APP_ID = #{appId,jdbcType=INTEGER},
+			</if>
+			<if test="envId != null ">
+				ENV_ID = #{envId,jdbcType=INTEGER},
+			</if>
+			<if test="imgId != null ">
+				IMG_ID = #{imgId,jdbcType=INTEGER},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

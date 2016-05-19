@@ -1,0 +1,19 @@
+label{
+	text-align: right;	
+	margin-left:0px;
+}
+
+div .col-sm-9{
+	margin-left:-15px;
+}
+
+div .form-group{
+	margin-bottom:5px;
+}
+
+div .hint{
+	margin:5px 0px 5px 0px;
+	padding-left:130px;
+	color:red;
+	font-size:14px
+}

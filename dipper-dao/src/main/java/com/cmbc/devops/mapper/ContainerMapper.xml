@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.ContainerMapper" >
+  <resultMap id="BaseResultMap" type="com.cmbc.devops.entity.Container" >
+    <id column="CON_ID" property="conId" jdbcType="INTEGER" />
+    <result column="CON_UUID" property="conUuid" jdbcType="VARCHAR" />
+    <result column="CON_IMGID" property="conImgid" jdbcType="INTEGER" />
+    <result column="CON_CREATOR" property="conCreator" jdbcType="INTEGER" />
+    <result column="CON_NAME" property="conName" jdbcType="VARCHAR" />
+    <result column="CON_POWER" property="conPower" jdbcType="TINYINT" />
+    <result column="CON_STATUS" property="conStatus" jdbcType="TINYINT" />
+    <result column="APP_STATUS" property="appStatus" jdbcType="TINYINT" />
+    <result column="MONITOR_STATUS" property="monitorStatus" jdbcType="TINYINT" />
+    <result column="CON_START_COMMAND" property="conStartCommand" jdbcType="VARCHAR" />
+    <result column="CON_START_PARAM" property="conStartParam" jdbcType="VARCHAR" />
+    <result column="CON_CPU" property="conCpu" jdbcType="INTEGER" />
+    <result column="CON_MEM" property="conMem" jdbcType="INTEGER" />
+    <result column="CON_DESC" property="conDesc" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="INTEGER" />
+    <result column="HOST_ID" property="hostId" jdbcType="INTEGER" />
+    <result column="MONITOR_HOST_ID" property="monitorHostId" jdbcType="VARCHAR" />
+    <result column="CLUSTER_IP" property="clusterIp" jdbcType="VARCHAR" />
+    <result column="CLUSTER_PORT" property="clusterPort" jdbcType="VARCHAR" />
+    <result column="CON_CREATETIME" property="conCreatetime" jdbcType="TIMESTAMP" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CON_ID, CON_UUID, CON_IMGID, CON_CREATOR, CON_NAME, CON_POWER, APP_STATUS, MONITOR_STATUS,  CON_STATUS, CON_START_COMMAND, 
+    CON_START_PARAM, CON_CPU, CON_MEM, CON_DESC, APP_ID, HOST_ID, MONITOR_HOST_ID, CLUSTER_IP, 
+    CLUSTER_PORT, CON_CREATETIME, TENANT_ID
+  </sql>
+  
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.cmbc.devops.entity.Container">
+  	select
+  	<include refid="Base_Column_List"/>
+  	from dop_container
+  	where 1=1 and CON_STATUS != 0
+  	<if test="conUuid !=null and conUuid !=''">
+  	AND CON_UUID like '%#{conUuid,jdbcType=VARCHAR}%' 
+  	</if>
+  	<if test="conName !=null and conName !=''">
+  	AND CON_NAME like '%#{conName,jdbcType=VARCHAR}%' 
+  	</if>
+  	<if test="conPower != null">
+  	AND CON_POWER = #{conPower,jdbcType=TINYINT}
+  	</if>
+  	<if test="conImgid != null">
+  	AND CON_IMGID = #{conImgid,jdbcType=INTEGER}
+  	</if>
+  	<if test="clusterIp != null and clusterIp !=''">
+  	AND CLUSTER_IP like '%#{clusterIp,jdbcType=VARCHAR}%'
+  	</if>
+  	<if test="clusterPort != null and clusterPort !=''">
+  	AND CLUSTER_PORT like '%#{clusterPort,jdbcType=VARCHAR}%'
+  	</if>
+  	<if test="hostId != null and hostId !=''">
+  	AND HOST_ID = #{hostId,jdbcType=INTEGER}
+  	</if>
+  	<if test="appId != null and appId !=''">
+  	AND APP_ID = #{appId,jdbcType=INTEGER}
+  	</if>
+  	<if test="conDesc != null and conDesc !=''">
+  	AND CON_DESC like '%#{conDesc,jdbcType=VARCHAR}%'
+  	</if>
+  	<if test="tenantId != null and tenantId != 0">
+  	AND TENANT_ID = #{tenantId,jdbcType=INTEGER}
+  	</if>
+  	order by CON_CREATETIME desc
+  </select>
+  
+   <!-- 通过UUID的前八位匹配搜索 -->
+   <select id="selectContainersByShortUUIDAll" resultMap="BaseResultMap" parameterType="com.cmbc.devops.entity.Container">
+  	select
+  	<include refid="Base_Column_List"/>
+  	from dop_container
+  	where 1=1 and CON_STATUS != 0
+  	<if test="conUuid !=null and conUuid !=''">
+  	AND SUBSTR(CON_UUID,1,8) like '%${conUuid}%'
+  	</if>
+  	<if test="conName !=null and conName !=''">
+  	AND CON_NAME like '%#{conName,jdbcType=VARCHAR}%' 
+  	</if>
+  	<if test="conPower != null">
+  	AND CON_POWER = #{conPower,jdbcType=TINYINT}
+  	</if>
+  	<if test="appStatus != null">
+  	AND APP_STATUS = #{appStatus,jdbcType=TINYINT}
+  	</if>
+  	<if test="monitorStatus != null">
+  	AND MONITOR_STATUS = #{monitorStatus,jdbcType=TINYINT}
+  	</if>
+  	<if test="conImgid != null">
+  	AND CON_IMGID = #{conImgid,jdbcType=INTEGER}
+  	</if>
+  	<if test="clusterIp != null and clusterIp !=''">
+  	AND CLUSTER_IP like '%#{clusterIp,jdbcType=VARCHAR}%'
+  	</if>
+  	<if test="clusterPort != null and clusterPort !=''">
+  	AND CLUSTER_PORT like '%#{clusterPort,jdbcType=VARCHAR}%'
+  	</if>
+  	<if test="hostId != null and hostId !=''">
+  	AND HOST_ID = #{hostId,jdbcType=INTEGER}
+  	</if>
+  	<if test="appId != null">
+  	AND APP_ID = #{appId,jdbcType=INTEGER}
+  	</if>
+  	<if test="conDesc != null and conDesc !=''">
+  	AND CON_DESC like '%#{conDesc,jdbcType=VARCHAR}%'
+  	</if>
+  	<if test="tenantId != null and tenantId != 0">
+  	AND TENANT_ID = #{tenantId,jdbcType=INTEGER}
+  	</if>
+  	order by CON_CREATETIME desc
+  </select>
+  
+  
+  <select id="selectContainer" resultMap="BaseResultMap" parameterType="com.cmbc.devops.entity.Container" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_container
+    where 1=1 AND CON_STATUS != 0
+    <if test="conId != null and conId != ''">
+     AND CON_ID = #{conId,jdbcType=INTEGER}
+    </if>
+    <if test="conUuid != null and conUuid != ''">
+     AND CON_UUID = #{conUuid,jdbcType=VARCHAR}
+    </if>
+    <if test="conName != null and conName != ''">
+     AND CON_NAME = #{conName,jdbcType=VARCHAR}
+    </if>
+    <if test="appId != null and appId != ''">
+     AND APP_ID = #{appId,jdbcType=VARCHAR}
+    </if>
+    <if test="tenantId != null and tenantId != 0">
+  	 AND TENANT_ID = #{tenantId,jdbcType=INTEGER}
+  	</if>
+  </select>
+  
+  <select id="selectContainerByAppId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_container
+    where 1=1 AND CON_STATUS != 0
+    AND APP_ID = #{appId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectContainerByAppIdAndImgId" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dop_container
+    where 1=1 AND CON_STATUS != 0
+    AND APP_ID = #{0} and CON_IMGID=#{1}
+    order by CON_CREATETIME desc
+  </select>
+  
+  <select id="selectContainerByImageId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_container
+    where 1=1 AND CON_STATUS =1
+    AND CON_IMGID = #{imageId} ORDER BY CON_CREATETIME
+    LIMIT 0,#{conNum}
+  </select>
+  
+  <select id="upContainerNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select COUNT(1)
+    from dop_container
+    where 1=1 AND CON_STATUS=1
+    AND CON_IMGID=#{imageId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectContainerByHostId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_container
+    where 1=1 AND CON_STATUS = 1
+    AND HOST_ID = #{hostId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectLastConId" resultType="Integer">
+  	select CON_ID from dop_container order by CON_ID desc LIMIT 1
+  </select>
+  
+  <select id="selectContainers" resultMap="BaseResultMap">  
+	 Select  
+	 <include refid="Base_Column_List" />  
+	 from dop_container where CON_ID in  
+	 <foreach item="item" index="index" collection="array" open="(" separator="," close=") ">  
+	  #{item}  
+	 </foreach> 
+	 and CON_STATUS != 0
+  </select>  
+  
+  <delete id="deleteContainer" parameterType="java.lang.Integer" >
+    delete from dop_container
+    where CON_ID = #{conId,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insertContainer" parameterType="com.cmbc.devops.entity.Container" >
+    <selectKey resultType="java.lang.Integer" keyProperty="conId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dop_container
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="conUuid != null and conUuid != ''" >
+        CON_UUID,
+      </if>
+      <if test="conImgid != null " >
+        CON_IMGID,
+      </if>
+      <if test="conCreator != null " >
+        CON_CREATOR,
+      </if>
+      <if test="conName != null and conName != ''" >
+        CON_NAME,
+      </if>
+      <if test="conPower != null " >
+        CON_POWER,
+      </if>
+       <if test="appStatus != null " >
+        APP_STATUS,
+      </if>
+       <if test="monitorStatus != null " >
+        MONITOR_STATUS,
+      </if>
+      <if test="conStatus != null " >
+        CON_STATUS,
+      </if>
+      <if test="conStartCommand != null and conStartCommand != ''" >
+        CON_START_COMMAND,
+      </if>
+      <if test="conStartParam != null and conStartParam != ''" >
+        CON_START_PARAM,
+      </if>
+      <if test="conCpu != null " >
+        CON_CPU,
+      </if>
+      <if test="conMem != null " >
+        CON_MEM,
+      </if>
+      <if test="conDesc != null and conDesc != ''" >
+        CON_DESC,
+      </if>
+      <if test="appId != null " >
+        APP_ID,
+      </if>
+      <if test="hostId != null " >
+        HOST_ID,
+      </if>
+      <if test="monitorHostId != null " >
+        MONITOR_HOST_ID,
+      </if>
+      <if test="clusterIp != null " >
+        CLUSTER_IP,
+      </if>
+      <if test="clusterPort != null " >
+        CLUSTER_PORT,
+      </if>
+      <if test="conCreatetime != null " >
+        CON_CREATETIME,
+      </if>
+      <if test="tenantId != null">
+  	    TENANT_ID,
+  	  </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="conUuid != null and conUuid != ''" >
+        #{conUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="conImgid != null " >
+        #{conImgid,jdbcType=INTEGER},
+      </if>
+      <if test="conCreator != null " >
+        #{conCreator,jdbcType=INTEGER},
+      </if>
+      <if test="conName != null and conName != ''" >
+        #{conName,jdbcType=VARCHAR},
+      </if>
+      <if test="conPower != null " >
+        #{conPower,jdbcType=TINYINT},
+      </if>
+      <if test="appStatus != null " >
+        #{appStatus,jdbcType=TINYINT},
+      </if>
+      <if test="monitorStatus != null " >
+        #{monitorStatus,jdbcType=TINYINT},
+      </if>
+      <if test="conStatus != null " >
+        #{conStatus,jdbcType=TINYINT},
+      </if>
+      <if test="conStartCommand != null and conStartCommand != ''" >
+        #{conStartCommand,jdbcType=VARCHAR},
+      </if>
+      <if test="conStartParam != null and conStartParam != ''" >
+        #{conStartParam,jdbcType=VARCHAR},
+      </if>
+      <if test="conCpu != null " >
+        #{conCpu,jdbcType=INTEGER},
+      </if>
+      <if test="conMem != null " >
+        #{conMem,jdbcType=INTEGER},
+      </if>
+      <if test="conDesc != null and conDesc != ''" >
+        #{conDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null " >
+        #{appId,jdbcType=INTEGER},
+      </if>
+      <if test="hostId != null " >
+        #{hostId,jdbcType=INTEGER},
+      </if>
+      <if test="monitorHostId != null " >
+        #{monitorHostId,jdbcType=VARCHAR},
+      </if>
+       <if test="clusterIp != null " >
+        #{clusterIp,jdbcType=VARCHAR},
+      </if>
+       <if test="clusterPort != null " >
+        #{clusterPort,jdbcType=VARCHAR},
+      </if>
+      <if test="conCreatetime != null " >
+        #{conCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tenantId != null">
+    	#{tenantId,jdbcType=INTEGER},
+  	  </if>
+    </trim>
+  </insert>
+  
+  <update id="updateContainer" parameterType="com.cmbc.devops.entity.Container" >
+    update dop_container
+    <set >
+      <if test="conUuid != null and conUuid != ''" >
+        CON_UUID = #{conUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="conImgid != null " >
+        CON_IMGID = #{conImgid,jdbcType=INTEGER},
+      </if>
+      <if test="conCreator != null " >
+        CON_CREATOR = #{conCreator,jdbcType=INTEGER},
+      </if>
+      <if test="conName != null and conName != ''" >
+        CON_NAME = #{conName,jdbcType=VARCHAR},
+      </if>
+      <if test="conPower != null " >
+        CON_POWER = #{conPower,jdbcType=TINYINT},
+      </if>
+      <if test="appStatus != null " >
+        APP_STATUS = #{appStatus,jdbcType=TINYINT},
+      </if>
+      <if test="monitorStatus != null " >
+        MONITOR_STATUS = #{monitorStatus,jdbcType=TINYINT},
+      </if>
+      <if test="conStatus != null " >
+        CON_STATUS = #{conStatus,jdbcType=TINYINT},
+      </if>
+      <if test="conStartCommand != null and conStartCommand != ''" >
+        CON_START_COMMAND = #{conStartCommand,jdbcType=VARCHAR},
+      </if>
+      <if test="conStartParam != null and conStartParam != ''" >
+        CON_START_PARAM = #{conStartParam,jdbcType=VARCHAR},
+      </if>
+      <if test="conCpu != null " >
+        CON_CPU = #{conCpu,jdbcType=INTEGER},
+      </if>
+      <if test="conMem != null " >
+        CON_MEM = #{conMem,jdbcType=INTEGER},
+      </if>
+      <if test="conDesc != null and conDesc != ''" >
+        CON_DESC = #{conDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null " >
+        APP_ID = #{appId,jdbcType=INTEGER},
+      </if>
+      <if test="hostId != null " >
+        HOST_ID = #{hostId,jdbcType=INTEGER},
+      </if>
+      <if test="clusterIp != null " >
+        CLUSTER_IP = #{clusterIp,jdbcType=VARCHAR},
+      </if>
+      <if test="hostId != null " >
+        CLUSTER_PORT = #{clusterPort,jdbcType=VARCHAR},
+      </if>
+      <if test="conCreatetime != null " >
+        CON_CREATETIME = #{conCreatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where CON_ID = #{conId,jdbcType=INTEGER} and CON_STATUS = 1
+  </update>
+  
+  <update id="updateConStatus" parameterType="com.cmbc.devops.entity.expand.ContainerExpand">  
+	 update dop_container  
+	 <set >
+		 <if test="conPower != null " >
+	        CON_POWER = #{conPower,jdbcType=TINYINT},
+	     </if> 
+	     <if test="conStatus != null ">
+	     	CON_STATUS = #{conPower,jdbcType=TINYINT},
+	     </if>
+	     <if test="appStatus != null " >
+	        APP_STATUS = #{appStatus,jdbcType=TINYINT},
+	     </if> 
+	     <if test="monitorStatus != null " >
+	        MONITOR_STATUS = #{monitorStatus,jdbcType=TINYINT}
+	     </if> 
+     </set>
+	 where CON_UUID in  
+	 <foreach item="item" index="index" collection="conUuids" open="(" separator="," close=") ">  
+	  #{item}  
+	 </foreach>  
+	 and CON_STATUS != 0
+  </update> 
+  
+</mapper>

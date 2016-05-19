@@ -1,0 +1,88 @@
+<!DOCTYPE chart[
+		<!ATTLIST chart legendPosition CDATA "RIGHT">
+		<!ATTLIST chart forceDecimals CDATA "0">
+		<!ATTLIST chart divLineAlpha CDATA "20">
+		<!ATTLIST chart numdivlines CDATA "4">
+		<!ATTLIST chart showValues CDATA "1">
+		<!ATTLIST chart formatNumberScale CDATA "0">
+		<!ATTLIST chart labelDisplay CDATA "WRAP">
+		<!ATTLIST chart slantLabels CDATA "1">
+		<!ATTLIST chart showAlternateVGridColor CDATA "1">
+		<!ATTLIST chart alternateHGridAlpha CDATA "23">
+		<!ATTLIST chart animation CDATA "1">
+		<!ATTLIST chart setAdaptiveYMin CDATA "1">
+		<!ATTLIST chart xAxisNamePadding CDATA "0">
+		<!ATTLIST chart showRealTimeValue CDATA "0">
+		<!ATTLIST chart realTimeValuePadding CDATA "0">
+		<!ATTLIST chart numDisplaySets CDATA "50">
+		<!ATTLIST chart labelPadding CDATA "5">
+		<!ATTLIST chart yAxisValuesPadding CDATA "2">
+		<!ATTLIST chart numVdivlines CDATA "5">
+		<!ATTLIST chart refreshInterval CDATA "20">
+		<!ATTLIST chart chartLeftMargin CDATA "2">
+		<!ATTLIST chart chartRightMargin CDATA "2">
+		<!ATTLIST chart chartTopMargin CDATA "5">
+		<!ATTLIST chart chartBottomMargin CDATA "2">
+		<!ATTLIST chart vDivLineAlpha CDATA "20">
+		<!ATTLIST chart shadowAlpha CDATA "100">
+		<!ATTLIST chart numberSuffix CDATA "%">
+		<!ATTLIST chart yAxisMinValue CDATA "0">
+		<!ATTLIST chart yAxisMaxValue CDATA "100">
+		<!ELEMENT categories (vLine)>
+		<!ELEMENT vLine (#PCDATA)>
+		  <!ATTLIST vLine alpha CDATA "20">
+		  <!ATTLIST vLine thickness CDATA "1">
+		<!ELEMENT dataset (set)>
+		<!ATTLIST dataset includeInLegend CDATA "1">
+		<!ATTLIST dataset showValues CDATA "0">
+		<!ATTLIST dataset color CDATA "FF0000">
+		<!ATTLIST dataset lineThickness CDATA "1">
+		<!ATTLIST dataset anchorRadius CDATA "0">
+		<!ATTLIST dataset showShadow CDATA "1">
+		  <!ATTLIST set value CDATA "0">
+	]>
+<!--forceDecimals=‘2’ 强制保留两位小数，对于5.1 转换为5.10 -->
+<!--divLineAlpha:水平分区线透明度，[0-100] -->
+<!--numDivLines:画布内部水平分区线条数，数字 -->
+<!--showValues:是否在图表显示对应的数据值，默认为1(True) -->
+<!--formatNumberScale:是否格式化数字,默认为1(True),自动的给你的数字加上K（千）或M（百万） -->
+<!--labelDisplay:显示X轴标签的方式，WRAP：水平显示；ROTATE：倾斜显示 -->
+<!--showAlternateVGridColor：是否在纵向网格带交替的颜色，默认为0(False) -->
+<!--alternateHGridAlpha：横向网格带的透明度，[0-100] -->
+<!--animation：是否使用动画 默认为0(False) -->
+<!--setAdaptiveYMin：是否可以将Y轴的最小值设置为0 -->
+<!--showRealTimeValue:(0/1)在图上显示最新从服务器上拿到的数据 -->
+<!--numDisplaySets： 如果想增加线里面的点数量,点与点的距离，数字越大，点距越近 -->
+<!--labelPadding:X轴的标题与X轴线之间的距离 -->
+<!--yAxisValuesPadding：Y轴的标题与Y轴线之间的距离 -->
+<!--numVDivLines：画布内部垂直分区线条数，数字 -->
+<!--refreshInterval: 绘图刷新时间间隔 -->
+<!--chartLeftMargin,chartRightMargin,chartTopMargin,chartBottomMargin:图全部内容与左右上下周围的距离 -->
+<!--vDivLineAlpha：垂直分割线的透明度 -->
+<!--showShadow：显示折线下面的阴影 -->
+<!--numberSuffix：数字的后缀 -->
+<chart legendPosition='RIGHT' forceDecimals='0' divLineAlpha='20'
+	numdivlines='4' showValues='1' formatNumberScale='0' labelDisplay='WRAP'
+	slantLabels='1' showAlternateVGridColor='1' alternateHGridAlpha='23'
+	animation='1' setAdaptiveYMin='0' xAxisNamePadding='0'
+	showRealTimeValue='0' realTimeValuePadding='0' numDisplaySets='60'
+	labelPadding='5' yAxisValuesPadding='2' numVdivlines='5'
+	refreshInterval='20' chartLeftMargin='2' chartRightMargin='2'
+	chartTopMargin='5' chartBottomMargin='2' vDivLineAlpha='20'
+	shadowAlpha='100' yAxisMinValue='0' yAxisMaxValue='100'>
+	<categories>
+		<vLine alpha='20' thickness='1' />
+	</categories>
+	<dataset includeInLegend='1' showValues='0' color='FF0000'
+		lineThickness='1' anchorRadius='0' showShadow='1'>
+		<set value='0' />
+	</dataset>
+	<dataset includeInLegend='1' showValues='0' color='00FF00'
+		lineThickness='1' anchorRadius='0' showShadow='1'>
+		<set value='0' />
+	</dataset>
+	<dataset includeInLegend='1' showValues='0' color='0000FF'
+		lineThickness='1' anchorRadius='0' showShadow='1'>
+		<set value='0' />
+	</dataset>
+</chart>

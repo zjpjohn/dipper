@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmbc.devops.dao.EnvMapper">
+	<resultMap id="BaseResultMap" type="com.cmbc.devops.entity.Env">
+		<id column="ENV_ID" jdbcType="INTEGER" property="envId" />
+		<result column="ENV_NAME" jdbcType="VARCHAR" property="envName" />
+		<result column="ENV_STATUS" jdbcType="TINYINT" property="envStatus" />
+		<result column="ENV_DESC" jdbcType="VARCHAR" property="envDesc" />
+		<result column="ENV_CREATETIME" jdbcType="TIMESTAMP" property="envCreatetime" />
+		<result column="ENV_CREATOR" jdbcType="INTEGER" property="envCreator" />
+		<result column="CONFIG_CENTER" jdbcType="VARCHAR" property="configCenter" />
+		<result column="ENV_PARAM" jdbcType="VARCHAR" property="envParam" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ENV_ID, ENV_NAME, ENV_STATUS, ENV_DESC, ENV_CREATETIME,
+		ENV_CREATOR,CONFIG_CENTER,ENV_PARAM
+	</sql>
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dop_env
+		where 1 =1 and ENV_STATUS != 0
+	</select>
+
+	<select id="selectAllEnvs" resultMap="BaseResultMap"
+		parameterType="com.cmbc.devops.entity.Env">
+		select
+		<include refid="Base_Column_List" />
+		from dop_env
+		where 1 =1 and ENV_STATUS != 0
+		<if test="envName != null and envName != ''">
+			and ENV_NAME like '%${envName}%'
+		</if>
+		<if test="envDesc != null and envDesc != ''">
+			And ENV_DESC like '%${envDesc}%'
+		</if>
+	</select>
+
+
+	<select id="select" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dop_env
+		where ENV_ID = #{envId,jdbcType=INTEGER} and ENV_STATUS !=
+		0
+	</select>
+
+	<select id="listByAppId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from dop_env
+		where env_ID in (select env_id FROM
+		dop_env_app where
+		app_id = #{appId,jdbcType=INTEGER} ) AND
+		ENV_STATUS != 0
+	</select>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		update dop_env set ENV_STATUS
+		= 0
+		where ENV_ID = #{envId,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.cmbc.devops.entity.Env">
+		<selectKey resultType="java.lang.Integer" keyProperty="envId"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dop_env
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="envName != null and envName != ''">
+				ENV_NAME,
+			</if>
+			<if test="envStatus != null ">
+				ENV_STATUS,
+			</if>
+			<if test="envDesc != null and envDesc != ''">
+				ENV_DESC,
+			</if>
+			<if test="envCreatetime != null ">
+				ENV_CREATETIME,
+			</if>
+			<if test="envCreator != null ">
+				ENV_CREATOR,
+			</if>
+			<if test="configCenter != null ">
+				CONFIG_CENTER,
+			</if>
+			<if test="envParam != null and envParam != '' ">
+				ENV_PARAM,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="envId != null ">
+				#{envId,jdbcType=INTEGER},
+			</if>
+			<if test="envName != null and envName != ''">
+				#{envName,jdbcType=VARCHAR},
+			</if>
+			<if test="envStatus != null ">
+				#{envStatus,jdbcType=TINYINT},
+			</if>
+			<if test="envDesc != null and envDesc != ''">
+				#{envDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="envCreatetime != null ">
+				#{envCreatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="envCreator != null ">
+				#{envCreator,jdbcType=INTEGER},
+			</if>
+			<if test="configCenter != null and configCenter != ''">
+				#{configCenter,jdbcType=VARCHAR},
+			</if>
+			<if test="envParam != null and envParam != '' ">
+				#{envParam,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.cmbc.devops.entity.Env">
+		update dop_env
+		set ENV_NAME =
+		#{envName,jdbcType=VARCHAR},
+		ENV_DESC = #{envDesc,jdbcType=VARCHAR},
+		CONFIG_CENTER=#{configCenter,jdbcType=VARCHAR},
+		ENV_PARAM=#{envParam,jdbcType=VARCHAR}
+		where ENV_ID =
+		#{envId,jdbcType=INTEGER} and ENV_STATUS != 0
+	</update>
+</mapper>

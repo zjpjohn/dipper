@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.UserMapper">
+	<resultMap id="BaseResultMap" type="com.cmbc.devops.entity.User">
+		<id column="USER_ID" property="userId" jdbcType="INTEGER" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="USER_PASS" property="userPass" jdbcType="VARCHAR" />
+		<result column="USER_MAIL" property="userMail" jdbcType="VARCHAR" />
+		<result column="USER_PHONE" property="userPhone" jdbcType="VARCHAR" />
+		<result column="USER_COMPANY" property="userCompany" jdbcType="VARCHAR" />
+		<result column="USER_LEVEL" property="userLevel" jdbcType="INTEGER" />
+		<result column="USER_STATUS" property="userStatus" jdbcType="TINYINT" />
+		<result column="USER_LOGIN_STATUS" property="userLoginStatus"
+			jdbcType="VARCHAR" />
+		<result column="USER_ROLEID" property="userRoleid" jdbcType="INTEGER" />
+		<result column="USER_CREATEDATE" property="userCreatedate"
+			jdbcType="TIMESTAMP" />
+		<result column="USER_CREATOR" property="userCreator" jdbcType="INTEGER" />
+		<result column="CREATE_USER_NAME" property="createUserName"
+			jdbcType="VARCHAR" />
+		<result column="TENANT_ID" property="tenantId" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		USER_ID, USER_NAME, USER_PASS, USER_MAIL, USER_PHONE,
+		USER_COMPANY,
+		USER_LEVEL, USER_STATUS,
+		USER_LOGIN_STATUS, USER_ROLEID,
+		USER_CREATEDATE, USER_CREATOR, TENANT_ID
+	</sql>
+
+	<!-- 获取全部的用户列表 -->
+	<select id="fetchAllUser" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dop_user
+		where USER_STATUS !=0
+	</select>
+
+	<!-- Select all user -->
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		a.USER_ID, a.USER_NAME, a.USER_PASS, a.USER_MAIL, a.USER_PHONE,
+		a.USER_COMPANY,
+		a.USER_LEVEL, a.USER_STATUS,
+		a.USER_ROLEID,
+		a.USER_CREATEDATE, a.USER_CREATOR,b.USER_NAME as CREATE_USER_NAME
+		from
+		dop_user a,dop_user b
+		where 1 = 1 AND a.USER_LEVEL !=0 AND
+		a.USER_CREATOR=b.USER_ID
+		<if test="userName != null and userName !=''">
+			AND a.USER_NAME LIKE '%${userName}%'
+		</if>
+		<if test="userRoleid != null and userRoleid !=''">
+			AND a.USER_ROLEID =#{userRoleid}
+		</if>
+		<if test="userMail != null and userMail !=''">
+			AND a.USER_MAIL LIKE '%${userMail}%'
+		</if>
+		<if test="userPhone != null and userPhone !=''">
+			AND a.USER_PHONE LIKE '%${userPhone}%'
+		</if>
+		<if test="userCompany != null and userCompany !=''">
+			AND a.USER_COMPANY LIKE '%${userCompany}%'
+		</if>
+		<if test="tenantId != null and tenantId !=''">
+			AND a.TENANT_ID = #{tenantId}
+		</if>
+	</select>
+
+	<select id="selectUserByName" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from dop_user
+		where USER_NAME = #{userName,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 批量更新，将用户划入租户资源中 -->
+	<select id="updateUserInTenant" parameterType="java.util.Map">
+		update dop_user
+		set TENANT_ID=#{tenantId}
+		<foreach collection="userIdList" index="index" item="userIds"
+			open="(" separator="," close=")">
+			#{userIds}
+		</foreach>
+	</select>
+
+	<!-- 获取全部没有被分配租户资源的用户列表 -->
+	<select id="getOrphanUsers" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from dop_user
+		where TENANT_ID is NULL
+	</select>
+
+	<select id="selectUser" resultMap="BaseResultMap" parameterType="com.cmbc.devops.entity.User">
+		select
+		a.USER_ID, a.USER_NAME, a.USER_PASS, a.USER_MAIL, a.USER_PHONE,
+		a.USER_COMPANY,
+		a.USER_LEVEL, a.USER_STATUS, a.USER_LOGIN_STATUS,
+		a.USER_ROLEID, a.USER_CREATEDATE, a.USER_CREATOR, a.TENANT_ID,
+		b.USER_NAME as
+		CREATE_USER_NAME
+		from dop_user a,dop_user b
+		where 1 = 1
+		AND a.USER_CREATOR=b.USER_ID
+		<if test="userId != null and userId != ''">
+    	<![CDATA[
+    		AND a.USER_ID = #{userId,jdbcType=INTEGER} 
+    	]]>
+		</if>
+		<if test="userName != null and userName != ''">
+    	<![CDATA[
+    		AND a.USER_NAME = #{userName,jdbcType=VARCHAR}
+    	]]>
+		</if>
+	</select>
+
+	<!-- Freeze user by userId -->
+	<update id="deleteUser" parameterType="java.lang.Integer">
+		update dop_user
+		<set>
+			USER_STATUS = 0
+		</set>
+		where USER_ID = #{userId,jdbcType=INTEGER}
+	</update>
+
+	<!-- Active user by userId -->
+	<update id="activeUser" parameterType="java.lang.Integer">
+		update dop_user
+		<set>
+			USER_STATUS = 1
+		</set>
+		where USER_ID = #{userId,jdbcType=INTEGER}
+	</update>
+
+	<!-- Insert user -->
+	<insert id="insertUser" parameterType="com.cmbc.devops.entity.User"
+		useGeneratedKeys="true" keyProperty="userId">
+		insert into dop_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userName != null and userName != ''">
+				USER_NAME,
+			</if>
+			<if test="userPass != null and userPass != ''">
+				USER_PASS,
+			</if>
+			<if test="userMail != null and userMail != ''">
+				USER_MAIL,
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				USER_PHONE,
+			</if>
+			<if test="userCompany != null and userCompany != ''">
+				USER_COMPANY,
+			</if>
+			<if test="userLevel != null ">
+				USER_LEVEL,
+			</if>
+			<if test="userStatus != null ">
+				USER_STATUS,
+			</if>
+			<if test="userRoleid != null ">
+				USER_ROLEID,
+			</if>
+			<if test="userCreatedate != null ">
+				USER_CREATEDATE,
+			</if>
+			<if test="userCreator != null ">
+				USER_CREATOR,
+			</if>
+			<if test="tenantId != null ">
+				TENANT_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userName != null and userName != ''">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="userPass != null and userPass != ''">
+				#{userPass,jdbcType=VARCHAR},
+			</if>
+			<if test="userMail != null and userMail != ''">
+				#{userMail,jdbcType=VARCHAR},
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				#{userPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="userCompany != null and userCompany != ''">
+				#{userCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="userLevel != null ">
+				#{userLevel,jdbcType=INTEGER},
+			</if>
+			<if test="userStatus != null ">
+				#{userStatus,jdbcType=TINYINT},
+			</if>
+			<if test="userRoleid != null ">
+				#{userRoleid,jdbcType=INTEGER},
+			</if>
+			<if test="userCreatedate != null ">
+				#{userCreatedate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userCreator != null ">
+				#{userCreator,jdbcType=INTEGER},
+			</if>
+			<if test="tenantId != null ">
+				#{tenantId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- Update user by userId -->
+	<update id="updateUser" parameterType="com.cmbc.devops.entity.User">
+		update dop_user
+		<set>
+			<if test="userName != null and userName != ''">
+				USER_NAME = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="userPass != null and userPass != ''">
+				USER_PASS = #{userPass,jdbcType=VARCHAR},
+			</if>
+			<if test="userMail != null and userMail != ''">
+				USER_MAIL = #{userMail,jdbcType=VARCHAR},
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				USER_PHONE = #{userPhone,jdbcType=VARCHAR},
+			</if>
+			USER_COMPANY = #{userCompany,jdbcType=VARCHAR},
+			<if test="userLevel != null ">
+				USER_LEVEL = #{userLevel,jdbcType=INTEGER},
+			</if>
+			<if test="userStatus != null ">
+				USER_STATUS = #{userStatus,jdbcType=TINYINT},
+			</if>
+			<if test="userRoleid != null ">
+				USER_ROLEID = #{userRoleid,jdbcType=INTEGER},
+			</if>
+			<if test="userCreatedate != null ">
+				USER_CREATEDATE = #{userCreatedate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userCreator != null ">
+				USER_CREATOR = #{userCreator,jdbcType=INTEGER},
+			</if>
+			<if test="userLoginStatus != null ">
+				USER_LOGIN_STATUS = #{userLoginStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="tenantId != null ">
+				TENANT_ID = #{tenantId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where USER_ID = #{userId,jdbcType=INTEGER}
+	</update>
+
+</mapper>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.LogMapper" >
+  <resultMap id="BaseResultMap" type="com.cmbc.devops.entity.Log" >
+    <id column="LOG_ID" property="logId" jdbcType="INTEGER" />
+    <result column="LOG_OBJECT" property="logObject" jdbcType="VARCHAR" />
+    <result column="LOG_ACTION" property="logAction" jdbcType="VARCHAR" />
+    <result column="LOG_RESULT" property="logResult" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="USER_IP" property="userIp" jdbcType="VARCHAR" />
+    <result column="LOG_DETAIL" property="logDetail" jdbcType="LONGVARCHAR" />
+    <result column="LOG_CREATETIME" property="logCreatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    LOG_ID, LOG_OBJECT, LOG_ACTION, LOG_RESULT, USER_ID, USER_IP, LOG_DETAIL, LOG_CREATETIME
+  </sql>
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List"/>
+  	from dop_log where 1=1 
+  	<if test="logObject !=null and logObject !=''">
+  	And LOG_OBJECT = #{logObject,jdbcType=VARCHAR} 
+  	</if>
+  	<if test="beginTime !=null">
+  	And LOG_CREATETIME &gt; #{beginTime,jdbcType=TIMESTAMP} 
+  	</if>
+  	<if test="endTime !=null">
+  	And LOG_CREATETIME &lt; #{endTime,jdbcType=TIMESTAMP} 
+  	</if>
+    order by LOG_CREATETIME DESC
+  </select>
+  <select id="selectLog" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_log
+    where LOG_ID = #{logId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteLog" parameterType="java.lang.Integer" >
+    delete from dop_log
+    where LOG_ID = #{logId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertLog" parameterType="com.cmbc.devops.entity.Log" >
+    <selectKey resultType="java.lang.Integer" keyProperty="logId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dop_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="logObject != null " >
+        LOG_OBJECT,
+      </if>
+      <if test="logAction != null " >
+        LOG_ACTION,
+      </if>
+      <if test="logResult != null " >
+        LOG_RESULT,
+      </if>
+      <if test="userId != null " >
+        USER_ID,
+      </if>
+      <if test="userIp != null">
+      	USER_IP,
+      </if>
+      <if test="logCreatetime != null " >
+        LOG_CREATETIME,
+      </if>
+      <if test="logDetail != null " >
+        LOG_DETAIL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="logObject != null " >
+        #{logObject,jdbcType=VARCHAR},
+      </if>
+      <if test="logAction != null " >
+        #{logAction,jdbcType=VARCHAR},
+      </if>
+      <if test="logResult != null " >
+        #{logResult,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null " >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userIp != null " >
+        #{userIp,jdbcType=VARCHAR},
+      </if>
+      <if test="logCreatetime != null " >
+        #{logCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logDetail != null " >
+        #{logDetail,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateLog" parameterType="com.cmbc.devops.entity.Log" >
+    update dop_log
+    <set >
+      <if test="logObject != null " >
+        LOG_OBJECT = #{logObject,jdbcType=VARCHAR},
+      </if>
+      <if test="logAction != null " >
+        LOG_ACTION = #{logAction,jdbcType=VARCHAR},
+      </if>
+      <if test="logResult != null " >
+        LOG_RESULT = #{logResult,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null " >
+        USER_ID = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userIp != null " >
+        USER_IP = #{userIp,jdbcType=VARCHAR},
+      </if>
+      <if test="logCreatetime != null " >
+        LOG_CREATETIME = #{logCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logDetail != null " >
+        LOG_DETAIL = #{logDetail,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where LOG_ID = #{logId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.RoleActionMapper" >
+  <resultMap id="BaseResultMap" type="com.cmbc.devops.entity.RoleAction" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ROLE_ID" property="roleId" jdbcType="INTEGER" />
+    <result column="ACTION_ID" property="actionId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ROLE_ID, ACTION_ID
+  </sql>
+  
+  
+  <!-- Select all user -->
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List"/>
+  	from dop_role_action
+  	where 1 = 1 
+  	<if test="roleId != null " >
+  	  AND ROLE_ID = #{roleId}
+  	</if>
+  </select>
+  <!--  -->
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_role_action
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByRoleId" parameterType="java.lang.Integer" >
+    delete from dop_role_action
+    where 
+        ROLE_ID = #{roleId}
+  </delete>
+  
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from dop_role_action
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.cmbc.devops.entity.RoleAction" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dop_role_action
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleId != null " >
+        ROLE_ID,
+      </if>
+      <if test="actionId != null " >
+        ACTION_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleId != null " >
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="actionId != null " >
+        #{actionId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.cmbc.devops.entity.RoleAction" >
+    update dop_role_action
+    <set >
+      <if test="roleId != null " >
+        ROLE_ID = #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="actionId != null " >
+        ACTION_ID = #{actionId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

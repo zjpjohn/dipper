@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.SoftwareMapper">
+	<resultMap id="BaseResultMap" type="com.cmbc.devops.entity.Software">
+		<id column="SW_ID" property="swId" jdbcType="INTEGER" />
+		<result column="SW_TYPE" property="swType" jdbcType="TINYINT" />
+		<result column="SW_STATUS" property="swStatus" jdbcType="TINYINT" />
+		<result column="SW_NAME" property="swName" jdbcType="VARCHAR" />
+		<result column="SW_VERSION" property="swVersion" jdbcType="VARCHAR" />
+		<result column="SW_YUMCALL" property="swYumcall" jdbcType="VARCHAR" />
+		<result column="SW_DESC" property="swDesc" jdbcType="VARCHAR" />
+		<result column="SW_CREATETIME" property="swCreatetime"
+			jdbcType="TIMESTAMP" />
+		<result column="SW_CREATOR" property="swCreator" jdbcType="INTEGER" />
+		<result column="TENANT_ID" property="tenantId" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		SW_ID, SW_TYPE, SW_STATUS, SW_NAME, SW_VERSION, SW_YUMCALL,
+		SW_DESC,
+		SW_CREATETIME,
+		SW_CREATOR, TENANT_ID
+	</sql>
+
+	<!-- select all -->
+	<select id="selectAll" resultMap="BaseResultMap"
+		parameterType="com.cmbc.devops.entity.Software">
+		select
+		<include refid="Base_Column_List" />
+		from dop_software
+		where 1=1 AND SW_STATUS!=0
+		<if test="swType != null">
+			And SW_TYPE = #{swType,jdbcType=TINYINT}
+		</if>
+		<if test="swName != null and swName != ''">
+			And SW_NAME like '%${swName}%'
+		</if>
+		<if test="swVersion != null and swVersion != ''">
+			And SW_VERSION like '%${swVersion}%'
+		</if>
+		<if test="swYumcall != null and swYumcall != ''">
+			And SW_YUMCALL like '%${swYumcall}%'
+		</if>
+		<if test="swDesc != null and swDesc != ''">
+			And SW_DESC like '%${swDesc}%'
+		</if>
+		<!-- 租户资源ID为0，属于超级管理员资源内 -->
+		<if test="tenantId != null and tenantId != 0">
+			AND TENANT_ID = #{tenantId,jdbcType=INTEGER}
+		</if>
+		order by SW_CREATETIME desc
+	</select>
+
+
+
+	<select id="getListByHostId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		soft.SW_ID, soft.SW_TYPE, soft.SW_STATUS,
+		soft.SW_NAME, soft.SW_VERSION, soft.SW_YUMCALL,
+		soft.SW_DESC,
+		soft.SW_CREATETIME,
+		soft.SW_CREATOR, soft.TENANT_ID
+		from dop_software
+		soft,dop_host_soft hs
+		where hs.HOST_ID= #{hostId,jdbcType=INTEGER} AND
+		soft.SW_ID=hs.SW_ID
+		order by soft.SW_CREATETIME desc
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from dop_software
+		where SW_ID = #{swId,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectByName" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from dop_software
+		where SW_NAME = #{swName}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		dop_software
+		where SW_ID = #{swId,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 批量删除软件记录 -->
+	<update id="deleteSofts" parameterType="java.util.List">
+		update dop_software
+		<set>
+			SW_STATUS = 0
+		</set>
+		where SW_ID in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<insert id="insert" parameterType="com.cmbc.devops.entity.Software">
+		insert into dop_software
+		(SW_ID, SW_TYPE, SW_STATUS,
+		SW_NAME, SW_VERSION, SW_YUMCALL,
+		SW_DESC,
+		SW_CREATETIME, SW_CREATOR,
+		TENANT_ID)
+		values (#{swId,jdbcType=INTEGER},
+		#{swType,jdbcType=TINYINT},
+		#{swStatus,jdbcType=TINYINT},
+		#{swName,jdbcType=VARCHAR}, #{swVersion,jdbcType=VARCHAR},
+		#{swYumcall,jdbcType=VARCHAR},
+		#{swDesc,jdbcType=VARCHAR},
+		#{swCreatetime,jdbcType=TIMESTAMP},
+		#{swCreator,jdbcType=INTEGER},
+		#{tenantId,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.cmbc.devops.entity.Software">
+		<selectKey resultType="java.lang.Integer" keyProperty="swId"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dop_software
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="swId != null">
+				SW_ID,
+			</if>
+			<if test="swType != null">
+				SW_TYPE,
+			</if>
+			<if test="swStatus != null">
+				SW_STATUS,
+			</if>
+			<if test="swName != null">
+				SW_NAME,
+			</if>
+			<if test="swVersion != null">
+				SW_VERSION,
+			</if>
+			<if test="swYumcall != null">
+				SW_YUMCALL,
+			</if>
+			<if test="swDesc != null">
+				SW_DESC,
+			</if>
+			<if test="swCreatetime != null">
+				SW_CREATETIME,
+			</if>
+			<if test="swCreator != null">
+				SW_CREATOR,
+			</if>
+			<if test="tenantId != null">
+				TENANT_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="swId != null">
+				#{swId,jdbcType=INTEGER},
+			</if>
+			<if test="swType != null">
+				#{swType,jdbcType=TINYINT},
+			</if>
+			<if test="swStatus != null">
+				#{swStatus,jdbcType=TINYINT},
+			</if>
+			<if test="swName != null">
+				#{swName,jdbcType=VARCHAR},
+			</if>
+			<if test="swVersion != null">
+				#{swVersion,jdbcType=VARCHAR},
+			</if>
+			<if test="swYumcall != null">
+				#{swYumcall,jdbcType=VARCHAR},
+			</if>
+			<if test="swDesc != null">
+				#{swDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="swCreatetime != null">
+				#{swCreatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="swCreator != null">
+				#{swCreator,jdbcType=INTEGER},
+			</if>
+			<if test="tenantId != null">
+				#{tenantId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cmbc.devops.entity.Software">
+		update dop_software
+		<set>
+			<if test="swType != null">
+				SW_TYPE = #{swType,jdbcType=TINYINT},
+			</if>
+			<if test="swStatus != null">
+				SW_STATUS = #{swStatus,jdbcType=TINYINT},
+			</if>
+			<if test="swName != null">
+				SW_NAME = #{swName,jdbcType=VARCHAR},
+			</if>
+			<if test="swVersion != null">
+				SW_VERSION = #{swVersion,jdbcType=VARCHAR},
+			</if>
+			<if test="swYumcall != null">
+				SW_YUMCALL = #{swYumcall,jdbcType=VARCHAR},
+			</if>
+			<if test="swDesc != null">
+				SW_DESC = #{swDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="swCreatetime != null">
+				SW_CREATETIME = #{swCreatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="swCreator != null">
+				SW_CREATOR = #{swCreator,jdbcType=INTEGER},
+			</if>
+			<if test="tenantId != null">
+				TENANT_ID = #{tenantId,jdbcType=INTEGER},
+			</if>
+		</set>
+		where SW_ID = #{swId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cmbc.devops.entity.Software">
+		update
+		dop_software
+		set SW_TYPE = #{swType,jdbcType=TINYINT},
+		SW_STATUS =
+		#{swStatus,jdbcType=TINYINT},
+		SW_NAME = #{swName,jdbcType=VARCHAR},
+		SW_VERSION = #{swVersion,jdbcType=VARCHAR},
+		SW_YUMCALL =
+		#{swYumcall,jdbcType=VARCHAR},
+		SW_DESC = #{swDesc,jdbcType=VARCHAR},
+		SW_CREATETIME = #{swCreatetime,jdbcType=TIMESTAMP},
+		SW_CREATOR =
+		#{swCreator,jdbcType=INTEGER},
+		TENANT_ID = #{tenantId,jdbcType=INTEGER}
+		where SW_ID = #{swId,jdbcType=INTEGER}
+	</update>
+</mapper>

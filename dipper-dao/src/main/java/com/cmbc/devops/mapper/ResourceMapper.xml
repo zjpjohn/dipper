@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.ResourceMapper">
+	<resultMap id="BaseResultMap" type="com.cmbc.devops.entity.DkResource">
+		<id column="RES_ID" property="resId" jdbcType="INTEGER" />
+		<result column="RES_NAME" property="resName" jdbcType="VARCHAR" />
+		<result column="RES_STATUS" property="resStatus" jdbcType="TINYINT" />
+		<result column="RES_CPU" property="resCPU" jdbcType="INTEGER" />
+		<result column="RES_MEM" property="resMEM" jdbcType="INTEGER" />
+		<result column="RES_BLKIO" property="resBLKIO" jdbcType="INTEGER" />
+		<result column="RES_DESC" property="resDesc" jdbcType="VARCHAR" />
+		<result column="RES_COMMENT" property="resComment" jdbcType="VARCHAR" />
+		<result column="RES_CREATOR" property="resCreator" jdbcType="INTEGER" />
+		<result column="RES_CREATETIME" property="resCreatetime"
+			jdbcType="TIMESTAMP" />
+		<result column="TENANT_ID" property="tenantId" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		RES_ID, RES_NAME, RES_STATUS, RES_CPU, RES_MEM, RES_BLKIO,
+		RES_DESC,
+		RES_COMMENT,
+		RES_CREATOR,
+		RES_CREATETIME,TENANT_ID
+	</sql>
+	<select id="selectAll" resultMap="BaseResultMap"
+		parameterType="com.cmbc.devops.entity.DkResource">
+		select
+		<include refid="Base_Column_List" />
+		from dop_resource where 1=1 and RES_STATUS !=0
+		<if test="resName !=null and resName !=''">
+			And RES_NAME like '%${resName}%'
+		</if>
+		<if test="resDesc !=null and resDesc !=''">
+			And RES_DESC like '%${resDesc}%'
+		</if>
+		<if test="resComment !=null and resComment !=''">
+			And RES_COMMENT like '%${resComment}%'
+		</if>
+		<!-- 租户资源ID为0，属于超级管理员资源内 -->
+		<if test="tenantId != null and tenantId != 0">
+			AND TENANT_ID = #{tenantId,jdbcType=INTEGER}
+		</if>
+		order by RES_CREATETIME DESC
+	</select>
+
+	<!-- Select all AcResource -->
+	<select id="selectAllViaIds" resultMap="BaseResultMap"
+		parameterType="java.util.List">
+		select
+		<include refid="Base_Column_List" />
+		from dop_resource
+		where RES_ID in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="selectResource" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from dop_resource
+		where RES_STATUS !=0 and RES_ID =
+		#{resId,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据資源ID链表查询多个符合条件資源对象 -->
+	<select id="selectMultiReses" resultMap="BaseResultMap"
+		parameterType="java.util.List">
+		select
+		<include refid="Base_Column_List" />
+		from dop_resource where RES_STATUS !=0 and RES_ID in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 批量插入划入租户资源中的资源记录 -->
+	<select id="batchInsertReses" resultMap="BaseResultMap"
+		parameterType="java.util.List" resultType="java.lang.Integer">
+		insert into dop_resource (RES_NAME, RES_STATUS, RES_CPU, RES_MEM,
+		RES_BLKIO,
+		RES_DESC,
+		RES_COMMENT,
+		RES_CREATOR,
+		RES_CREATETIME,TENANT_ID)
+		values
+		<foreach collection="list" index="index" item="item"
+			separator=",">
+			(#{item.resName}, #{item.resStatus},
+			#{item.resCPU},
+			#{item.resMEM}, #{item.resBLKIO},
+			#{item.resDesc},
+			#{item.resComment},
+			#{item.resCreator},
+			#{item.resCreatetime},
+			#{item.tenantId})
+		</foreach>
+	</select>
+
+	<delete id="deleteResource" parameterType="java.lang.Integer">
+		delete from
+		dop_resource
+		where RES_ID = #{resId,jdbcType=INTEGER} and RES_STATUS
+		!=0
+	</delete>
+
+	<insert id="insertResource" parameterType="com.cmbc.devops.entity.DkResource">
+		<selectKey resultType="java.lang.Integer" keyProperty="resId"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dop_resource
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="resName != null  and resName !=''">
+				RES_NAME,
+			</if>
+			<if test="resStatus != null ">
+				RES_STATUS,
+			</if>
+			<if test="resCPU != null ">
+				RES_CPU,
+			</if>
+			<if test="resMEM != null ">
+				RES_MEM,
+			</if>
+			<if test="resBLKIO != null ">
+				RES_BLKIO,
+			</if>
+			<if test="resDesc != null and resDesc !='' ">
+				RES_DESC,
+			</if>
+			<if test="resComment != null and resComment !=''">
+				RES_COMMENT,
+			</if>
+			<if test="resCreator != null ">
+				RES_CREATOR,
+			</if>
+			<if test="resCreatetime != null ">
+				RES_CREATETIME,
+			</if>
+			<if test="tenantId != null ">
+				TENANT_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="resName != null  and resName !=''">
+				#{resName,jdbcType=VARCHAR},
+			</if>
+			<if test="resStatus != null ">
+				#{resStatus,jdbcType=TINYINT},
+			</if>
+			<if test="resCPU != null ">
+				#{resCPU,jdbcType=INTEGER},
+			</if>
+			<if test="resMEM != null ">
+				#{resMEM,jdbcType=INTEGER},
+			</if>
+			<if test="resBLKIO != null ">
+				#{resBLKIO,jdbcType=INTEGER},
+			</if>
+			<if test="resDesc != null and resDesc !='' ">
+				#{resDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="resComment != null and resComment !=''">
+				#{resComment,jdbcType=VARCHAR},
+			</if>
+			<if test="resCreator != null ">
+				#{resCreator,jdbcType=INTEGER},
+			</if>
+			<if test="resCreatetime != null ">
+				#{resCreatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tenantId != null ">
+				#{tenantId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateResource" parameterType="com.cmbc.devops.entity.DkResource">
+		update dop_resource
+		<set>
+			<if test="resName != null  and resName !=''">
+				RES_NAME = #{resName,jdbcType=VARCHAR},
+			</if>
+			<if test="resCPU != null ">
+				RES_CPU = #{resCPU,jdbcType=INTEGER},
+			</if>
+			<if test="resMEM != null ">
+				RES_MEM = #{resMEM,jdbcType=INTEGER},
+			</if>
+			<if test="resBLKIO != null ">
+				RES_BLKIO = #{resBLKIO,jdbcType=INTEGER},
+			</if>
+			<if test="resDesc != null and resDesc !='' ">
+				RES_DESC = #{resDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="resComment != null and resComment !=''">
+				RES_COMMENT = #{resComment,jdbcType=VARCHAR},
+			</if>
+			<if test="resCreator != null ">
+				RES_CREATOR = #{resCreator,jdbcType=INTEGER},
+			</if>
+			<if test="resCreatetime != null ">
+				RES_CREATETIME = #{resCreatetime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where RES_ID = #{resId,jdbcType=INTEGER}
+	</update>
+
+	<!-- delete multi resources -->
+	<delete id="deleteResources" parameterType="java.util.List">
+		update dop_resource
+		set RES_STATUS=0
+		where RES_ID in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+</mapper>

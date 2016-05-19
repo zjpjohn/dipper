@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.AppMapper" >
+  <resultMap id="BaseResultMap" type="com.cmbc.devops.entity.App" >
+    <id column="APP_ID" property="appId" jdbcType="INTEGER" />
+    <result column="APP_NAME" property="appName" jdbcType="VARCHAR" />
+    <result column="APP_STATUS" property="appStatus" jdbcType="TINYINT" />
+    <result column="APP_CPU" property="appCpu" jdbcType="INTEGER" />
+    <result column="APP_MEM" property="appMem" jdbcType="INTEGER" />
+    <result column="APP_PORT_MAP" property="appPortMap" jdbcType="BIT" />
+    <result column="APP_PUB_PORT" property="appPubPort" jdbcType="INTEGER" />
+    <result column="APP_PRI_PORT" property="appPriPort" jdbcType="INTEGER" />
+    <result column="APP_ENV" property="appEnv" jdbcType="VARCHAR" />
+    <result column="BALANCE_ID" property="balanceId" jdbcType="INTEGER" />
+    <result column="APP_VOLUMN" property="appVolumn" jdbcType="VARCHAR" />
+    <result column="APP_PARAMS" property="appParams" jdbcType="VARCHAR" />
+    <result column="APP_HEALTH" property="appHealth" jdbcType="VARCHAR" />
+    <result column="APP_MONITOR" property="appMonitor" jdbcType="VARCHAR" />
+    <result column="APP_COMMAND" property="appCommand" jdbcType="VARCHAR" />
+    <result column="APP_URL" property="appUrl" jdbcType="VARCHAR" />
+    <result column="APP_PROXY" property="appProxy" jdbcType="VARCHAR" />
+    <result column="APP_GRAY_POLICY" property="appGrayPolicy" jdbcType="VARCHAR" />
+    <result column="APP_DESC" property="appDesc" jdbcType="VARCHAR" />
+    <result column="APP_CREATETIME" property="appCreatetime" jdbcType="TIMESTAMP" />
+    <result column="APP_CREATOR" property="appCreator" jdbcType="INTEGER" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="ModelResultMap" type="com.cmbc.devops.model.ApplicationDataModel" >
+    <id column="APP_ID" property="appId" jdbcType="INTEGER" />
+    <result column="APP_NAME" property="appName" jdbcType="VARCHAR" />
+    <result column="APP_URL" property="appUrl" jdbcType="VARCHAR" />
+    <result column="IMAGE_ID" property="imageId" jdbcType="TINYINT" />
+    <result column="IMAGE_NAME" property="imageName" jdbcType="VARCHAR" />
+    <result column="APP_VERSION" property="appVersion" jdbcType="VARCHAR" />
+    <result column="UPDATETME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="BALANCE_ID" property="balanceId" jdbcType="TINYINT" />
+    <result column="APP_CPU" property="appCpu" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    APP_ID, APP_NAME, APP_STATUS, APP_CPU, APP_MEM, APP_PORT_MAP, APP_PUB_PORT, APP_PRI_PORT, 
+    APP_ENV, BALANCE_ID, APP_VOLUMN, APP_PARAMS, APP_HEALTH, APP_MONITOR, APP_COMMAND, APP_URL, APP_PROXY, APP_GRAY_POLICY,
+    APP_DESC, APP_CREATETIME, APP_CREATOR, TENANT_ID
+  </sql>
+  
+  
+  
+   <select id="selectAllAppImage" resultMap="ModelResultMap" parameterType="com.cmbc.devops.model.ApplicationDataModel" >
+    SELECT
+	dop_app.APP_ID,dop_app.APP_NAME,dop_app.APP_CREATETIME UPDATETME,dop_app.BALANCE_ID,
+	dop_app.APP_URL,dop_image.IMAGE_ID,dop_image.IMAGE_NAME,dop_image.IMAGE_TAG APP_VERSION,
+	dop_app.APP_CPU
+	FROM
+		dop_app
+	LEFT JOIN dop_image ON dop_app.APP_ID = dop_image.APP_ID
+	WHERE
+		dop_app.APP_STATUS!= 0
+		<if test="appName!=null and appName!=''">
+			And APP_NAME like '%${appName}%'
+		</if>
+		<if test="appVersion!=null and appVersion!=''">
+			And dop_image.IMAGE_TAG like '%${appVersion}%'
+		</if>
+		<if test="appUrl!=null and appUrl!=''">
+			And APP_URL like '%${appUrl}%'
+		</if>
+	AND (dop_image.IMAGE_STATUS = 1 OR dop_image.IMAGE_STATUS IS NULL) ORDER BY IMAGE_ID DESC
+  </select>
+  
+  <select id="listAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_app
+    where APP_STATUS != 0
+  </select>
+  
+  <select id="selectAppByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_app
+    where APP_STATUS != 0 And APP_NAME = #{appName} 
+  </select>
+  
+  
+   <select id="getAppByLbAndUrl" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_app
+    where APP_STATUS != 0 And APP_URL = #{appUrl}
+    AND BALANCE_ID=#{balanceId} 
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap"
+		parameterType="com.cmbc.devops.entity.App">
+		select
+		<include refid="Base_Column_List" />
+		from dop_app
+		where 1 = 1 AND APP_STATUS!=0
+		<if test="appName!=null and appName!=''">
+			And APP_NAME like '%${appName}%'
+		</if>
+		<if test="appDesc!=null and appDesc!=''">
+			And APP_DESC like '%${appDesc}%'
+		</if>
+		<if test="appUrl!=null and appUrl!=''">
+			And APP_URL like '%${appUrl}%'
+		</if>
+		<if test="appStatus!=null and appStatus!=''">
+			And APP_STATUS = #{appStatus}
+		</if>
+		<if test="tenantId != null ">
+			And TENANT_ID = #{tenantId,jdbcType=INTEGER} 
+		</if>
+		order by APP_CREATETIME desc
+	</select>
+	
+	<!--(已作废) 多租户情况下，根据资源的ID过滤返回应用 -->
+	<select id="selectAll_TID" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from dop_app
+		where 1 = 1 AND APP_STATUS!=0
+		<if test="tenantId != null ">
+			And TENANT_ID = #{tenantId,jdbcType=INTEGER} 
+		</if>
+		order by APP_CREATETIME desc
+	</select>
+  
+  <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_app
+    where 1=1 and APP_STATUS != 0 and APP_ID = #{appId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByConId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_app
+    where 1=1 and APP_STATUS != 0 and APP_ID = (SELECT APP_ID FROM dop_container WHERE CON_ID=#{conId,jdbcType=INTEGER})
+  </select>
+  
+  <!-- select application not in LB -->
+  <select id="selectAppNotInLb" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select
+	<include refid="Base_Column_List" />
+	from dop_app
+	where (BALANCE_ID is NULL or BALANCE_ID=0) 
+	and TENANT_ID = #{tenantId,jdbcType=INTEGER} 
+	and	APP_STATUS!=0
+  </select>
+	
+  <!-- select application not in LB -->
+  <select id="selectAppInLb" resultMap="BaseResultMap" parameterType="com.cmbc.devops.entity.App">
+	select
+	<include refid="Base_Column_List" />
+	from dop_app
+	where BALANCE_ID = ${balanceId}
+	<if test="tenantId != null">
+		and TENANT_ID = ${tenantId}
+	</if> 
+	and	APP_STATUS!=0
+  </select>
+  
+  <!-- Select all image by appId-->
+	<select id="checkAppInEnv" resultType="Integer"
+		parameterType="java.util.Map">
+		select
+		count(*)
+		from dop_container where 1=1 AND CON_STATUS != 0
+		And CON_IMGID in (
+		select IMG_ID from dop_appenv_img 
+		where ENV_ID = #{envId} AND APP_ID = #{appId})
+		
+	</select>
+	
+	<!-- Select all image by appId-->
+	<select id="checkAppInCluster" resultType="Integer"
+		parameterType="java.util.Map">
+		select
+		count(*)
+		from dop_container where 1=1 AND CON_STATUS != 0
+		And APP_ID = #{appId} and CLUSTER_PORT = #{clusterPort}
+		
+	</select>
+  
+  <select id="selectLastAppId" resultType="Integer">
+  	select APP_ID from dop_app order by APP_ID desc LIMIT 1
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from dop_app
+    where APP_ID = #{appId,jdbcType=INTEGER} 
+  </delete>
+  
+  <insert id="insert" parameterType="com.cmbc.devops.entity.App" >
+  	<selectKey resultType="java.lang.Integer" keyProperty="appId"
+		order="AFTER">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
+    insert into dop_app
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="appName != null and appName != ''" >
+        APP_NAME,
+      </if>
+      <if test="appStatus != null " >
+        APP_STATUS,
+      </if>
+      <if test="appCpu != null " >
+        APP_CPU,
+      </if>
+      <if test="appMem != null " >
+        APP_MEM,
+      </if>
+      <if test="appPortMap != null " >
+        APP_PORT_MAP,
+      </if>
+      <if test="appPubPort != null " >
+        APP_PUB_PORT,
+      </if>
+      <if test="appPriPort != null " >
+        APP_PRI_PORT,
+      </if>
+      <if test="appEnv != null and appEnv != ''" >
+        APP_ENV,
+      </if>
+      <if test="balanceId != null and balanceId != 0 " >
+        BALANCE_ID,
+      </if>
+      <if test="appVolumn != null and appVolumn != ''" >
+        APP_VOLUMN,
+      </if>
+      <if test="appParams != null and appParams != ''" >
+        APP_PARAMS,
+      </if>
+      <if test="appHealth != null" >
+        APP_HEALTH,
+      </if>
+      <if test="appMonitor != null" >
+        APP_MONITOR,
+      </if>
+      <if test="appCommand != null and appCommand != ''" >
+        APP_COMMAND,
+      </if>
+      <if test="appUrl != null and appUrl != ''" >
+        APP_URL,
+      </if>
+      <if test="appProxy != null and appProxy != ''" >
+        APP_PROXY,
+      </if>
+      <if test="appGrayPolicy != null and appGrayPolicy != ''" >
+        APP_GRAY_POLICY,
+      </if>
+      <if test="appDesc != null and appDesc != ''" >
+        APP_DESC,
+      </if>
+      <if test="appCreatetime != null " >
+        APP_CREATETIME,
+      </if>
+      <if test="appCreator != null " >
+        APP_CREATOR,
+      </if>
+      <if test="tenantId != null " >
+        TENANT_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="appName != null and appName != ''" >
+        #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="appStatus != null " >
+        #{appStatus,jdbcType=TINYINT},
+      </if>
+      <if test="appCpu != null " >
+        #{appCpu,jdbcType=INTEGER},
+      </if>
+      <if test="appMem != null " >
+        #{appMem,jdbcType=INTEGER},
+      </if>
+      <if test="appPortMap != null " >
+        #{appPortMap,jdbcType=BIT},
+      </if>
+      <if test="appPubPort != null " >
+        #{appPubPort,jdbcType=INTEGER},
+      </if>
+      <if test="appPriPort != null " >
+        #{appPriPort,jdbcType=INTEGER},
+      </if>
+      <if test="appEnv != null and appEnv != ''" >
+        #{appEnv,jdbcType=VARCHAR},
+      </if>
+      <if test="balanceId != null and balanceId != 0 " >
+        #{balanceId,jdbcType=INTEGER},
+      </if>
+      <if test="appVolumn != null and appVolumn != ''" >
+        #{appVolumn,jdbcType=VARCHAR},
+      </if>
+      <if test="appParams != null and appParams != ''" >
+        #{appParams,jdbcType=VARCHAR},
+      </if>
+      <if test="appHealth != null " >
+        #{appHealth,jdbcType=TINYINT},
+      </if>
+      <if test="appMonitor != null " >
+        #{appMonitor,jdbcType=TINYINT},
+      </if>
+      <if test="appCommand != null and appCommand != ''" >
+        #{appCommand,jdbcType=VARCHAR},
+      </if>
+      <if test="appUrl != null and appUrl != ''" >
+        #{appUrl,jdbcType=VARCHAR},
+      </if>
+       <if test="appProxy != null and appProxy != ''" >
+        #{appProxy,jdbcType=VARCHAR},
+      </if>
+      <if test="appGrayPolicy != null and appGrayPolicy != ''" >
+        #{appGrayPolicy,jdbcType=VARCHAR},
+      </if>
+      <if test="appDesc != null and appDesc != ''" >
+        #{appDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="appCreatetime != null " >
+        #{appCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appCreator != null " >
+        #{appCreator,jdbcType=INTEGER},
+      </if>
+       <if test="tenantId != null " >
+        #{tenantId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.cmbc.devops.entity.App" >
+    update dop_app
+    <set >
+      <if test="appName != null and appName != ''" >
+        APP_NAME = #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="appStatus != null " >
+        APP_STATUS = #{appStatus,jdbcType=TINYINT},
+      </if>
+        APP_CPU = #{appCpu,jdbcType=INTEGER},
+        APP_MEM = #{appMem,jdbcType=INTEGER},
+        APP_PORT_MAP = #{appPortMap,jdbcType=BIT},
+        APP_PUB_PORT = #{appPubPort,jdbcType=INTEGER},
+        APP_PRI_PORT = #{appPriPort,jdbcType=INTEGER},
+        APP_ENV = #{appEnv,jdbcType=VARCHAR},
+        BALANCE_ID = #{balanceId,jdbcType=INTEGER},
+        APP_VOLUMN = #{appVolumn,jdbcType=VARCHAR},
+        APP_PARAMS = #{appParams,jdbcType=VARCHAR},
+        APP_HEALTH = #{appHealth,jdbcType=TINYINT},
+        APP_MONITOR = #{appMonitor,jdbcType=TINYINT},
+        APP_COMMAND = #{appCommand,jdbcType=VARCHAR},
+        APP_URL = #{appUrl,jdbcType=VARCHAR},
+        APP_PROXY = #{appProxy,jdbcType=VARCHAR},
+        APP_GRAY_POLICY = #{appGrayPolicy,jdbcType=VARCHAR},
+        APP_DESC = #{appDesc,jdbcType=VARCHAR},
+      <if test="appCreatetime != null " >
+        APP_CREATETIME = #{appCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appCreator != null " >
+        APP_CREATOR = #{appCreator,jdbcType=INTEGER},
+      </if>
+    </set>
+    where APP_ID = #{appId,jdbcType=INTEGER}
+  </update>
+</mapper>

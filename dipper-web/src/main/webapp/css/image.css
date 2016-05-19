@@ -1,0 +1,36 @@
+.wizard ol {
+	padding: 10px 51px 10px 50px;
+	border-bottom: 1px solid #eee;
+}
+
+.wizard-inner .types {
+	overflow: hidden;
+	margin: 0 auto 20px 0;
+}
+
+.wizard .wizard-action {
+	height: 64px !important;
+	text-align:right;
+	background-color: #f2f2f2;
+}
+
+.wizard-action .btn-back {
+	margin: 18px 15px 0 30px;
+}
+
+.wizard-action .btn-upload {
+	margin: 18px 15px 0 30px;
+}
+
+.wizard-action .btn-next {
+	float: right;
+	margin: 18px 20px 0 0;
+}
+
+.wizard-action .btn-create {
+	margin: 18px 15px 0px 0px;
+}
+
+.wizard-action .btn-push {
+	margin: 18px 20px 0 0;
+}

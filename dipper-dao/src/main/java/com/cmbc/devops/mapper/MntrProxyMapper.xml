@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.MntrProxyMapper">
+	<resultMap id="BaseResultMap" type="com.cmbc.devops.entity.MonitorProxy">
+		<id column="MP_ID" property="mpId" jdbcType="INTEGER" />
+		<result column="MP_NAME" property="mpName" jdbcType="VARCHAR" />
+		<result column="MP_STATUS" property="mpStatus" jdbcType="TINYINT" />
+		<result column="MP_IP" property="mpIP" jdbcType="VARCHAR" />
+		<result column="MP_PORT" property="mpPort" jdbcType="INTEGER" />
+		<result column="MP_DESC" property="mpDesc" jdbcType="VARCHAR" />
+		<result column="MP_COMMENT" property="mpComment" jdbcType="VARCHAR" />
+		<result column="MP_CREATOR" property="mpCreator" jdbcType="INTEGER" />
+		<result column="MP_CREATETIME" property="mpCreatetime"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		MP_ID, MP_NAME, MP_STATUS, MP_IP, MP_PORT,
+		MP_DESC,
+		MP_COMMENT, MP_CREATOR,
+		MP_CREATETIME
+	</sql>
+
+	<!-- Select all MonitorProxy -->
+	<select id="selectAll" resultMap="BaseResultMap"
+		parameterType="com.cmbc.devops.entity.MonitorProxy">
+		select
+		<include refid="Base_Column_List" />
+		from dop_mntrproxy
+		where 1 = 1 AND MP_STATUS!=0
+		<if test="mpName!=null and mpName!=''">
+			And MP_NAME like '%${mpName}%'
+		</if>
+		<if test="mpIP!=null and mpIP!=''">
+			And MP_IP like '%${mpIP}%'
+		</if>
+		<if test="mpPort!=null">
+			And MP_PORT = #{mpPort}
+		</if>
+		<if test="mpDesc!=null and mpDesc!=''">
+			And MP_DESC like '%${mpDesc}%'
+		</if>
+		<if test="mpComment!=null and mpComment!=''">
+			And MP_COMMENT like '%${mpComment}%'
+		</if>
+		order by MP_CREATETIME desc
+	</select>
+
+	<!-- Select MonitorProxy -->
+	<select id="selectMntrProxyById" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from dop_mntrproxy
+		where MP_STATUS!=0
+		AND MP_ID =
+		#{mpId,jdbcType=INTEGER}
+	</select>
+
+	<!-- change status to 0 -->
+	<update id="deleteMntrProxy" parameterType="java.util.List">
+		update dop_mntrproxy
+		<set>
+			MP_STATUS='0'
+		</set>
+		where MP_STATUS!=0 AND MP_ID in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<!-- insert MonitorProxy -->
+	<insert id="insertMntrProxy" parameterType="com.cmbc.devops.entity.MonitorProxy">
+		<selectKey resultType="java.lang.Integer" keyProperty="mpId"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dop_mntrproxy
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="mpName != null and mpName != ''">
+				MP_NAME,
+			</if>
+			<if test="mpStatus != null ">
+				MP_STATUS,
+			</if>
+			<if test="mpIP!=null and mpIP!=''">
+				MP_IP,
+			</if>
+			<if test="mpPort!=null">
+				MP_PORT,
+			</if>
+			<if test="mpDesc != null and mpDesc != ''">
+				MP_DESC,
+			</if>
+			<if test="mpComment != null and mpComment != ''">
+				MP_COMMENT,
+			</if>
+			<if test="mpCreator != null ">
+				MP_CREATOR,
+			</if>
+			<if test="mpCreatetime != null ">
+				MP_CREATETIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="mpName != null and mpName != ''">
+				#{mpName,jdbcType=VARCHAR},
+			</if>
+			<if test="mpStatus != null ">
+				#{mpStatus,jdbcType=TINYINT},
+			</if>
+			<if test="mpIP != null and mpIP != ''">
+				#{mpIP,jdbcType=VARCHAR},
+			</if>
+			<if test="mpPort != null">
+				#{mpPort,jdbcType=INTEGER},
+			</if>
+			<if test="mpDesc != null and mpDesc != ''">
+				#{mpDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="mpComment != null and mpComment != ''">
+				#{mpComment,jdbcType=VARCHAR},
+			</if>
+			<if test="mpCreator != null ">
+				#{mpCreator,jdbcType=INTEGER},
+			</if>
+			<if test="mpCreatetime != null ">
+				#{mpCreatetime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- update MonitorProxy -->
+	<update id="updateMntrProxy" parameterType="com.cmbc.devops.entity.MonitorProxy">
+		update dop_mntrproxy
+		<set>
+			<if test="mpName != null and mpName != ''">
+				MP_NAME = #{mpName,jdbcType=VARCHAR},
+			</if>
+			<if test="mpStatus != null ">
+				MP_STATUS = #{mpStatus,jdbcType=TINYINT},
+			</if>
+			<if test="mpIP != null and mpIP != ''">
+				MP_IP = #{mpIP,jdbcType=VARCHAR},
+			</if>
+			<if test="mpPort != null">
+				MP_PORT = #{mpPort,jdbcType=INTEGER},
+			</if>
+			<if test="mpDesc != null and mpDesc != ''">
+				MP_DESC = #{mpDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="mpComment != null and mpComment != ''">
+				MP_COMMENT = #{mpComment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where MP_ID = #{mpId,jdbcType=INTEGER} AND MP_STATUS!=0
+	</update>
+</mapper>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.ConPortMapper" >
+  <resultMap id="BaseResultMap" type="com.cmbc.devops.entity.ConPort" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="CONTAINER_ID" property="containerId" jdbcType="INTEGER" />
+    <result column="CON_IP" property="conIp" jdbcType="VARCHAR" />
+    <result column="PUB_PORT" property="pubPort" jdbcType="VARCHAR" />
+    <result column="PRI_PORT" property="priPort" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CONTAINER_ID, CON_IP, PUB_PORT, PRI_PORT
+  </sql>
+  
+  <select id="selectConport" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_con_port
+    where CONTAINER_ID = #{containerId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectConportByAppId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dop_con_port
+    where CONTAINER_ID in (select CON_ID from dop_container where APP_ID = #{appId, jdbcType=INTEGER} AND CON_POWER = 1 AND CON_STATUS = 1)
+  </select>
+  
+  <insert id="insertConport" parameterType="com.cmbc.devops.entity.ConPort" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dop_con_port
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="containerId != null " >
+        CONTAINER_ID,
+      </if>
+      <if test="conIp != null and conIp != ''" >
+        CON_IP,
+      </if>
+      <if test="pubPort != null and pubPort != ''" >
+        PUB_PORT,
+      </if>
+      <if test="priPort != null and priPort != ''" >
+        PRI_PORT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="containerId != null " >
+        #{containerId,jdbcType=INTEGER},
+      </if>
+      <if test="conIp != null and conIp != ''" >
+        #{conIp,jdbcType=VARCHAR},
+      </if>
+      <if test="pubPort != null and pubPort != ''" >
+        #{pubPort,jdbcType=VARCHAR},
+      </if>
+      <if test="priPort != null and priPort != ''" >
+        #{priPort,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <delete id="deleteConport" parameterType="java.lang.Integer" >
+    delete from dop_con_port
+    where CONTAINER_ID in  
+	<foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+	  #{item}  
+	</foreach>  
+  </delete>
+  
+  <update id="updateConport" parameterType="com.cmbc.devops.entity.ConPort" >
+    update dop_con_port
+    <set >
+      <if test="containerId != null " >
+        CONTAINER_ID = #{containerId,jdbcType=INTEGER},
+      </if>
+      <if test="conIp != null and conIp != ''" >
+        CON_IP = #{conIp,jdbcType=VARCHAR},
+      </if>
+      <if test="pubPort != null and pubPort != ''" >
+        PUB_PORT = #{pubPort,jdbcType=VARCHAR},
+      </if>
+      <if test="priPort != null and priPort != ''" >
+        PRI_PORT = #{priPort,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

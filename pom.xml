@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>dipper</groupId>
+  <artifactId>dipper</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- spring dependencies -->
+    <spring-web>4.1.6.RELEASE</spring-web>
+    <spring-webmvc>4.1.6.RELEASE</spring-webmvc>
+	<spring-context>4.1.6.RELEASE</spring-context>
+	<spring-test>4.1.6.RELEASE</spring-test>
+	<spring-websocket>4.1.6.RELEASE</spring-websocket>
+	<spring-messaging>4.1.6.RELEASE</spring-messaging>
+	<spring-aop>4.1.6.RELEASE</spring-aop>
+	<spring-aspects>4.1.6.RELEASE</spring-aspects>
+	<spring-context-support>4.1.6.RELEASE</spring-context-support>
+	<spring-tx>4.1.6.RELEASE</spring-tx>
+	<spring-jdbc>4.1.6.RELEASE</spring-jdbc>
+	<!-- mybatis dependencies -->
+	<mybatis>3.3.0</mybatis>
+	<mybatis-spring>1.2.0</mybatis-spring>
+	<pagehelper>4.0.0</pagehelper>
+	<c3p0>0.9.1.2</c3p0>
+	<!-- tools dependencies -->
+	<xmlrpc.client>3.1.3</xmlrpc.client>
+	<json-lib>2.4</json-lib>
+	<junit>4.11</junit>
+	<mysql-connector-java>5.1.32</mysql-connector-java>
+	<javax.servlet-api>3.1.0</javax.servlet-api>
+	<jstl>1.2</jstl>
+	<log4j>1.2.17</log4j>
+	<commons-codec>1.9</commons-codec>
+	<commons-httpclient>3.1</commons-httpclient>
+	<jackson-mapper-asl>1.9.12</jackson-mapper-asl>
+	<javax.websocket-api>1.1</javax.websocket-api>
+	<jetty-server>9.2.6.v20141205</jetty-server>
+	<websocket-server>9.2.6.v20141205</websocket-server>
+	<ganymed-ssh2>build210</ganymed-ssh2>
+	<jxl>2.6.12</jxl>
+	<velocity>1.7</velocity>
+	<itext>4.2.1</itext>
+	<quartz>2.2.1</quartz>
+	<httpclient.version>4.3.1</httpclient.version>
+	<commons-compress.version>1.5</commons-compress.version>
+	<commons-codec.version>1.8</commons-codec.version>
+	<commons-io.version>2.3</commons-io.version>
+	<commons-lang.version>2.6</commons-lang.version>
+	<slf4j-api.version>1.7.5</slf4j-api.version>
+	<bouncycastle.version>1.51</bouncycastle.version>
+	<unix-socket-factory.version>2015-01-27T15-02-14</unix-socket-factory.version>
+	<guava.version>18.0</guava.version>
+	<!-- jdk dependencies -->
+	<jdk.debug>true</jdk.debug>
+	<jdk.optimize>false</jdk.optimize>
+	<jdk.source>1.7</jdk.source>
+	<jdk.target>1.7</jdk.target>
+	<!-- test dependencies -->
+	<logback.version>1.1.0</logback.version>
+	<testng.version>5.12.1</testng.version>
+	<hamcrest.library.version>1.3</hamcrest.library.version>
+	<hamcrest.jpa-matchers>1.6</hamcrest.jpa-matchers>
+	<lambdaj.version>2.3.3</lambdaj.version>
+	<!-- maven dependencies -->
+	<maven-compiler-plugin>3.1</maven-compiler-plugin>
+	<maven-surefire-plugin>2.9</maven-surefire-plugin>
+	<maven-jar-plugin.version>2.2</maven-jar-plugin.version>
+	<maven-compiler-plugin.version>2.3.1</maven-compiler-plugin.version>
+	<maven-release-plugin.version>2.3.1</maven-release-plugin.version>
+	<maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
+	<maven-failsafe-plugin.version>2.17</maven-failsafe-plugin.version>
+	<cobertura-maven-plugin.version>2.5.1</cobertura-maven-plugin.version>
+	<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+	  <dependency>
+	    <groupId>junit</groupId>
+	    <artifactId>junit</artifactId>
+	    <version>4.11</version>
+	    <scope>test</scope>
+	  </dependency>
+	  <dependency>
+		<groupId>org.apache.xmlrpc</groupId>
+		<artifactId>xmlrpc-client</artifactId>
+		<version>3.1.3</version>
+	  </dependency>
+	  <dependency>
+		<groupId>org.json</groupId>
+		<artifactId>json</artifactId>
+		<version>20140107</version>
+	  </dependency>
+	</dependencies>
+  </dependencyManagement>
+  
+  <modules>
+  	<module>dipper-dao</module>
+  	<module>dipper-service</module>
+  	<module>dipper-common</module>
+  	<module>dipper-core</module>
+  	<module>dipper-web</module>
+  </modules>
+  
+  <build>
+  	<plugins>
+  		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>3.1</version>
+			<configuration>
+				<skip>true</skip>
+				<source>1.7</source>
+				<target>1.7</target>
+			</configuration>
+		</plugin>
+  	</plugins>
+   </build>
+   
+</project>

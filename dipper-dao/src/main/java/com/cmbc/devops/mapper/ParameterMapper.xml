@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.ParameterMapper">
+	<resultMap id="BaseResultMap" type="com.cmbc.devops.entity.Parameter">
+		<id column="PARAM_ID" property="paramId" jdbcType="INTEGER" />
+		<result column="PARAM_NAME" property="paramName" jdbcType="VARCHAR" />
+		<result column="PARAM_VALUE" property="paramValue" jdbcType="VARCHAR" />
+		<result column="PARAM_CONNECTOR" property="paramConnector"
+			jdbcType="TINYINT" />
+		<result column="PARAM_TYPE" property="paramType" jdbcType="TINYINT" />
+		<result column="PARAM_STATUS" property="paramStatus" jdbcType="TINYINT" />
+		<result column="PARAM_MUTEX" property="paramMutex" jdbcType="VARCHAR" />
+		<result column="PARAM_REUSABLE" property="paramReusable"
+			jdbcType="TINYINT" />
+		<result column="PARAM_DESC" property="paramDesc" jdbcType="VARCHAR" />
+		<result column="PARAM_COMMENT" property="paramComment"
+			jdbcType="VARCHAR" />
+		<result column="PARAM_CREATETIME" property="paramCreatetime"
+			jdbcType="TIMESTAMP" />
+		<result column="PARAM_CREATOR" property="paramCreator"
+			jdbcType="INTEGER" />
+		<result column="TENANT_ID" property="tenantId" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		PARAM_ID, PARAM_NAME, PARAM_VALUE,
+		PARAM_CONNECTOR,PARAM_TYPE,PARAM_STATUS,PARAM_MUTEX,PARAM_REUSABLE,
+		PARAM_DESC, PARAM_COMMENT,
+		PARAM_CREATETIME,
+		PARAM_CREATOR,TENANT_ID
+	</sql>
+
+	<!-- select all parameter -->
+	<select id="selectAll" resultMap="BaseResultMap"
+		parameterType="com.cmbc.devops.entity.Parameter">
+		select
+		<include refid="Base_Column_List" />
+		from dop_parameter
+		where 1=1 and PARAM_STATUS != 0
+		<if test="paramName !=null and paramName != ''">
+			AND PARAM_NAME like '%${paramName}%'
+		</if>
+		<if test="paramValue !=null and paramValue != ''">
+			AND PARAM_VALUE like '%${paramValue}%'
+		</if>
+		<if test="paramStatus !=null and paramStatus != ''">
+			AND PARAM_STATUS = #{paramStatus}
+		</if>
+		<if test="paramDesc !=null and paramDesc != ''">
+			AND PARAM_DESC like '%${paramDesc}%'
+		</if>
+		<if test="paramComment !=null and paramComment != ''">
+			AND PARAM_COMMENT like '%${paramComment}%'
+		</if>
+		<!-- 租户资源ID为0，属于超级管理员资源内 -->
+		<if test="tenantId != null and tenantId != 0">
+			AND TENANT_ID = #{tenantId,jdbcType=INTEGER}
+		</if>
+		order by PARAM_CREATETIME desc
+	</select>
+
+	<select id="selectParamByName" resultMap="BaseResultMap"
+		parameterType="com.cmbc.devops.entity.Parameter">
+		select
+		<include refid="Base_Column_List" />
+		from dop_parameter
+		where PARAM_STATUS !=0
+		<if test="paramName !=null and paramName != ''">
+			AND PARAM_NAME = #{paramName,jdbcType=VARCHAR}
+		</if>
+		<if test="tenantId !=null and tenantId !=''">
+			AND TENANT_ID = #{tenantId,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<!-- 根据参数ID链表查询多个符合条件参数对象 -->
+	<select id="selectMultiParams" parameterType="java.util.List">
+		select
+		<include refid="Base_Column_List" />
+		from dop_parameter where PARAM_STATUS != 0 and PARAM_ID in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 批量插入划入租户资源中的参数记录 -->
+	<select id="batchInsertParams" resultMap="BaseResultMap"
+		parameterType="java.util.List" resultType="java.lang.Integer">
+		insert into dop_parameter (PARAM_NAME, PARAM_VALUE,
+		PARAM_CONNECTOR,PARAM_TYPE,PARAM_STATUS,PARAM_MUTEX,PARAM_REUSABLE,
+		PARAM_DESC, PARAM_COMMENT,
+		PARAM_CREATETIME,
+		PARAM_CREATOR,TENANT_ID)
+		values
+		<foreach collection="list" index="index" item="item"
+			separator=",">
+			(#{item.paramName}, #{item.paramValue},
+			#{item.paramConnector},
+			#{item.paramType}, #{item.paramStatus},
+			#{item.paramMutex}, #{item.paramReusable}, #{item.paramDesc},
+			#{item.paramComment},
+			#{item.paramCreatetime}, #{item.paramCreator},
+			#{item.tenantId})
+		</foreach>
+	</select>
+
+	<select id="selectParamById" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from dop_parameter
+		where PARAM_ID = #{paramId,jdbcType=INTEGER} and
+		PARAM_STATUS !=0
+	</select>
+
+	<!-- delete parameter by primary key -->
+	<delete id="deleteParameter" parameterType="java.lang.Integer">
+		delete from
+		dop_parameter
+		where PARAM_ID = #{paramId,jdbcType=INTEGER} and
+		PARAM_STATUS != 0
+	</delete>
+
+	<!-- add parameter -->
+	<insert id="insertParameter" parameterType="com.cmbc.devops.entity.Parameter">
+		<selectKey resultType="java.lang.Integer" keyProperty="paramId"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dop_parameter
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="paramName != null and paramName != ''">
+				PARAM_NAME,
+			</if>
+			<if test="paramValue != null and paramValue != ''">
+				PARAM_VALUE,
+			</if>
+			<if test="paramConnector != null ">
+				PARAM_CONNECTOR,
+			</if>
+			<if test="paramType != null ">
+				PARAM_TYPE,
+			</if>
+			<if test="paramStatus != null ">
+				PARAM_STATUS,
+			</if>
+			<if test="paramReusable != null ">
+				PARAM_REUSABLE,
+			</if>
+			<if test="paramMutex != null and paramMutex != ''">
+				PARAM_MUTEX,
+			</if>
+			<if test="paramDesc != null and paramDesc != ''">
+				PARAM_DESC,
+			</if>
+			<if test="paramComment != null and paramComment != ''">
+				PARAM_COMMENT,
+			</if>
+			<if test="paramCreatetime != null ">
+				PARAM_CREATETIME,
+			</if>
+			<if test="paramCreator != null ">
+				PARAM_CREATOR,
+			</if>
+			<if test="tenantId !=null ">
+				TENANT_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="paramName != null and paramName != ''">
+				#{paramName,jdbcType=VARCHAR},
+			</if>
+			<if test="paramValue != null and paramValue != ''">
+				#{paramValue,jdbcType=VARCHAR},
+			</if>
+			<if test="paramConnector != null ">
+				#{paramConnector,jdbcType=TINYINT},
+			</if>
+			<if test="paramType != null ">
+				#{paramType,jdbcType=TINYINT},
+			</if>
+			<if test="paramStatus != null ">
+				#{paramStatus,jdbcType=TINYINT},
+			</if>
+			<if test="paramReusable != null ">
+				#{paramReusable,jdbcType=TINYINT},
+			</if>
+			<if test="paramMutex != null and paramMutex != ''">
+				#{paramMutex,jdbcType=VARCHAR},
+			</if>
+			<if test="paramDesc != null and paramDesc != ''">
+				#{paramDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="paramComment != null and paramComment != ''">
+				#{paramComment,jdbcType=VARCHAR},
+			</if>
+			<if test="paramCreatetime != null ">
+				#{paramCreatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="paramCreator != null ">
+				#{paramCreator,jdbcType=INTEGER},
+			</if>
+			<if test="tenantId != null ">
+				#{tenantId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- update parameter -->
+	<update id="updateParameter" parameterType="com.cmbc.devops.entity.Parameter">
+		update dop_parameter
+		<set>
+			<if test="paramName != null and paramName != ''">
+				PARAM_NAME = #{paramName,jdbcType=VARCHAR},
+			</if>
+			<if test="paramValue != null and paramValue != ''">
+				PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+			</if>
+			<if test="paramConnector != null ">
+				PARAM_CONNECTOR = #{paramConnector,jdbcType=TINYINT},
+			</if>
+			<if test="paramType != null ">
+				PARAM_TYPE = #{paramType,jdbcType=TINYINT},
+			</if>
+			<if test="paramStatus != null ">
+				PARAM_STATUS = #{paramStatus,jdbcType=TINYINT},
+			</if>
+			<if test="paramReusable != null ">
+				PARAM_REUSABLE = #{paramReusable,jdbcType=TINYINT},
+			</if>
+			<if test="paramMutex != null and paramMutex != ''">
+				PARAM_MUTEX = #{paramMutex,jdbcType=VARCHAR},
+			</if>
+			<if test="paramDesc != null and paramDesc != ''">
+				PARAM_DESC = #{paramDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="paramComment != null and paramComment != ''">
+				PARAM_COMMENT = #{paramComment,jdbcType=VARCHAR},
+			</if>
+			<if test="paramCreatetime != null ">
+				PARAM_CREATETIME = #{paramCreatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="paramCreator != null ">
+				PARAM_CREATOR = #{paramCreator,jdbcType=INTEGER},
+			</if>
+		</set>
+		where PARAM_ID = #{paramId,jdbcType=INTEGER} and PARAM_STATUS != 0
+	</update>
+
+	<update id="update" parameterType="java.util.List">
+		update dop_parameter
+		set PARAM_STATUS=0
+		where PARAM_ID in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=") ">
+			#{item}
+		</foreach>
+		and PARAM_STATUS != 0
+	</update>
+</mapper>

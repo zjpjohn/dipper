@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.RoleMapper">
+	<resultMap id="BaseResultMap" type="com.cmbc.devops.entity.Role">
+		<id column="ROLE_ID" property="roleId" jdbcType="INTEGER" />
+		<result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+		<result column="ROLE_DESC" property="roleDesc" jdbcType="VARCHAR" />
+		<result column="ROLE_REMARKS" property="roleRemarks" jdbcType="TINYINT" />
+		<result column="ROLE_STATUS" property="roleStatus" jdbcType="TINYINT" />
+		<result column="ROLE_CREATOR" property="roleCreator" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ROLE_ID, ROLE_NAME, ROLE_DESC, ROLE_REMARKS, ROLE_STATUS
+	</sql>
+
+	<!-- Select all roles -->
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dop_role
+		where 1 = 1
+		<!-- AND ROLE_STATUS != 0 显示全部状态用户角色 -->
+		<if test="roleName != null and roleName !=''">
+			AND ROLE_NAME LIKE '%${roleName}%'
+		</if>
+		<if test="roleDesc != null and roleDesc !=''">
+			AND ROLE_DESC LIKE '%${roleDesc}%'
+		</if>
+		<if test="roleStatus != null ">
+			AND ROLE_STATUS = #{roleStatus,jdbcType=TINYINT}
+		</if>
+		<if test="roleCreator!= null ">
+			AND ROLE_CREATOR = #{roleCreator,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<!-- Select all user -->
+	<select id="selectRolesByUserId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dop_role
+		where 1 = 1 AND ROLE_STATUS != 0
+		AND ROLE_ID IN (SELECT
+		ROLE_ID FROM dop_user_role WHERE USER_ID =
+		#{userId,jdbcType=INTEGER})
+	</select>
+	
+	<!-- Select all user -->
+	<select id="getRoleByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from dop_role
+		where 1 = 1 AND ROLE_NAME=#{userName,jdbcType=VARCHAR}
+	</select>
+
+	<!-- Select all user -->
+	<select id="selectRolesAndUserByUserId" resultMap="BaseResultMap" >
+		SELECT
+		a.ROLE_ID,
+		a.ROLE_NAME, a.ROLE_DESC, a.ROLE_REMARKS, a.ROLE_STATUS, (CASE WHEN
+		b.ID is NULL THEN 0 ELSE 1 END) AS IS_USED
+		FROM
+		dop_role a
+		LEFT JOIN (
+		SELECT
+		*
+		FROM
+		dop_user_role
+		WHERE
+		USER_ID = #{userId,jdbcType=INTEGER}
+		) b
+		ON a.ROLE_ID = b.ROLE_ID
+
+	</select>
+
+	<!-- -->
+	<select id="selectRoleById" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from dop_role
+		where ROLE_ID = #{roleId,jdbcType=INTEGER}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		update dop_role
+		<set>
+			ROLE_STATUS = 0
+		</set>
+		where ROLE_ID = #{roleId,jdbcType=INTEGER}
+	</delete>
+
+	<select id="selectRole" resultMap="BaseResultMap" parameterType="com.cmbc.devops.entity.Role">
+		select
+		<include refid="Base_Column_List" />
+		from dop_role
+		where 1=1
+		<if test="roleId != null and roleId != ''">
+    	<![CDATA[
+    		AND ROLE_ID = #{roleId,jdbcType=INTEGER} 
+    	]]>
+		</if>
+	</select>
+
+	<insert id="insert" parameterType="com.cmbc.devops.entity.Role">
+		<selectKey resultType="java.lang.Integer" keyProperty="roleId"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dop_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="roleName != null and roleName != ''">
+				ROLE_NAME,
+			</if>
+			<if test="roleDesc != null and roleDesc != ''">
+				ROLE_DESC,
+			</if>
+			<if test="roleRemarks != null ">
+				ROLE_REMARKS,
+			</if>
+			<if test="roleStatus != null ">
+				ROLE_STATUS,
+			</if>
+			<if test="roleCreator!= null ">
+				ROLE_CREATOR
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="roleName != null and roleName != ''">
+				#{roleName,jdbcType=VARCHAR},
+			</if>
+			<if test="roleDesc != null and roleDesc != ''">
+				#{roleDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="roleRemarks != null ">
+				#{roleRemarks,jdbcType=TINYINT},
+			</if>
+			<if test="roleStatus != null ">
+				#{roleStatus,jdbcType=TINYINT},
+			</if>
+			<if test="roleCreator!= null ">
+				#{roleCreator,jdbcType=INTEGER}
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.cmbc.devops.entity.Role">
+		update dop_role
+		<set>
+			<if test="roleName != null and roleName != ''">
+				ROLE_NAME = #{roleName,jdbcType=VARCHAR},
+			</if>
+			<if test="roleDesc != null">
+				ROLE_DESC = #{roleDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="roleRemarks != null ">
+				ROLE_REMARKS = #{roleRemarks,jdbcType=TINYINT},
+			</if>
+			<if test="roleStatus != null ">
+				ROLE_STATUS = #{roleStatus,jdbcType=TINYINT},
+			</if>
+		</set>
+		where ROLE_ID = #{roleId,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmbc.devops.dao.ImageMapper">
+	<resultMap id="BaseResultMap" type="com.cmbc.devops.entity.Image">
+		<id column="IMAGE_ID" property="imageId" jdbcType="INTEGER" />
+		<result column="IMAGE_UUID" property="imageUuid" jdbcType="VARCHAR" />
+		<result column="IMAGE_STATUS" property="imageStatus" jdbcType="TINYINT" />
+		<result column="IMAGE_NAME" property="imageName" jdbcType="VARCHAR" />
+		<result column="IMAGE_TAG" property="imageTag" jdbcType="VARCHAR" />
+		<result column="IMAGE_TYPE" property="imageType" jdbcType="VARCHAR" />
+		<result column="IMAGE_SIZE" property="imageSize" jdbcType="VARCHAR" />
+		<result column="IMAGE_DESC" property="imageDesc" jdbcType="VARCHAR" />
+		<result column="APP_ID" property="appId" jdbcType="INTEGER" />
+		<result column="IMAGE_PORT" property="imagePort" jdbcType="VARCHAR" />
+		<result column="IMAGE_CREATETIME" property="imageCreatetime"
+			jdbcType="TIMESTAMP" />
+		<result column="IMAGE_CREATOR" property="imageCreator"
+			jdbcType="INTEGER" />
+		<result column="TENANT_ID" property="tenantId" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		IMAGE_ID, IMAGE_UUID, IMAGE_STATUS, IMAGE_NAME,
+		IMAGE_TAG,IMAGE_TYPE,
+		IMAGE_SIZE, IMAGE_DESC,
+		APP_ID, IMAGE_PORT,
+		IMAGE_CREATETIME, IMAGE_CREATOR, TENANT_ID
+	</sql>
+
+	<!-- Select all image -->
+	<select id="selectAllImage" resultMap="BaseResultMap"
+		parameterType="com.cmbc.devops.entity.Image">
+		select
+		<include refid="Base_Column_List" />
+		from dop_image where 1=1 AND IMAGE_STATUS!=0
+		<if test="appId !=null and appId !=''">
+			AND APP_ID = #{appId}
+		</if>
+		<if test="imageUuid !=null and imageUuid !=''">
+			AND IMAGE_UUID like '%${imageUuid}%'
+		</if>
+		<if test="imageName !=null and imageName !=''">
+			AND IMAGE_NAME like '%${imageName}%'
+		</if>
+		<if test="imageTag !=null and imageTag !=''">
+			AND IMAGE_TAG like '%${imageTag}%'
+		</if>
+		<if test="imageStatus !=null and imageStatus !=''">
+			AND IMAGE_STATUS = #{imageStatus,jdbcType=TINYINT}
+		</if>
+		<if test="imageType !=null and imageType !=''">
+			AND IMAGE_TYPE like '%${imageType}%'
+		</if>
+		<if test="imageType ==''">
+			AND IMAGE_TYPE NOT IN ('APP','BASIC') OR IMAGE_TYPE is null AND
+			IMAGE_STATUS !=0
+			<!-- @bug85 判断所有类型未知的镜像 -->
+		</if>
+		<!-- 租户资源ID为0，属于超级管理员资源内 -->
+		<if test="tenantId != null and tenantId != 0">
+			AND TENANT_ID = #{tenantId,jdbcType=INTEGER}
+		</if>
+		order by IMAGE_CREATETIME DESC,IMAGE_TAG DESC
+	</select>
+
+	<!-- Select all image by appId and envId -->
+	<select id="selectImagesByappIdAndEnvId" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from dop_image where 1=1 and IMAGE_STATUS = 1
+		And IMAGE_ID in (
+		select
+		IMG_ID from dop_appenv_img
+		where ENV_ID = #{envId} AND APP_ID = #{appId})
+
+	</select>
+
+	<!-- Select all image by appId -->
+	<select id="selectImagesByappId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from dop_image where 1=1 and IMAGE_STATUS = 1
+		And IMAGE_ID in (
+		select
+		IMG_ID from dop_appenv_img
+		where APP_ID = #{appId,jdbcType=INTEGER})
+
+	</select>
+
+	<!-- 根据镜像ID链表查询多个符合条件镜像对象 -->
+	<select id="selectMultiImages" resultMap="BaseResultMap"
+		parameterType="java.util.List">
+		select
+		<include refid="Base_Column_List" />
+		from dop_image where IMAGE_STATUS = 1 and IMAGE_ID in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 批量插入划入租户资源中的镜像记录 -->
+	<select id="batchInsertImages" parameterType="java.util.List"
+		resultType="java.lang.Integer">
+		insert into dop_image (IMAGE_UUID, IMAGE_STATUS, IMAGE_NAME,
+		IMAGE_TAG,IMAGE_TYPE,
+		IMAGE_SIZE, IMAGE_DESC,
+		APP_ID, IMAGE_PORT,
+		IMAGE_CREATETIME, IMAGE_CREATOR, TENANT_ID) values
+		<foreach collection="list" index="index" item="item"
+			separator=",">
+			(#{item.imageUuid}, #{item.imageStatus},
+			#{item.imageName},
+			#{item.imageTag}, #{item.imageType},
+			#{item.imageSize},
+			#{item.imageDesc}, #{item.appId},
+			#{item.imagePort},
+			#{item.imageCreatetime}, #{item.imageCreator},
+			#{item.tenantId})
+		</foreach>
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from dop_image
+		where IMAGE_STATUS !=0 and IMAGE_ID =
+		#{imageId,jdbcType=INTEGER}
+	</select>
+
+	<delete id="deleteImage" parameterType="java.lang.Integer">
+		update dop_image set
+		IMAGE_STATUS =0
+		where IMAGE_ID = #{imageId,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insertImage" parameterType="com.cmbc.devops.entity.Image">
+		<selectKey resultType="java.lang.Integer" keyProperty="imageId"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dop_image
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="imageUuid != null and imageUuid != ''">
+				IMAGE_UUID,
+			</if>
+			<if test="imageStatus != null ">
+				IMAGE_STATUS,
+			</if>
+			<if test="imageName != null and imageName != ''">
+				IMAGE_NAME,
+			</if>
+			<if test="imageTag != null and imageTag != ''">
+				IMAGE_TAG,
+			</if>
+			<if test="imageType != null and imageType != ''">
+				IMAGE_TYPE,
+			</if>
+			<if test="imageSize != null ">
+				IMAGE_SIZE,
+			</if>
+			<if test="imageDesc != null and imageDesc != ''">
+				IMAGE_DESC,
+			</if>
+			<if test="appId != null ">
+				APP_ID,
+			</if>
+			<if test="imagePort != null and imagePort != ''">
+				IMAGE_PORT,
+			</if>
+			<if test="imageCreatetime != null ">
+				IMAGE_CREATETIME,
+			</if>
+			<if test="imageCreator != null ">
+				IMAGE_CREATOR,
+			</if>
+			<if test="tenantId !=null ">
+				TENANT_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="imageUuid != null and imageUuid != ''">
+				#{imageUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="imageStatus != null ">
+				#{imageStatus,jdbcType=TINYINT},
+			</if>
+			<if test="imageName != null and imageName != ''">
+				#{imageName,jdbcType=VARCHAR},
+			</if>
+			<if test="imageTag != null and imageTag != ''">
+				#{imageTag,jdbcType=VARCHAR},
+			</if>
+			<if test="imageType != null and imageType != ''">
+				#{imageType,jdbcType=VARCHAR},
+			</if>
+			<if test="imageSize != null ">
+				#{imageSize,jdbcType=INTEGER},
+			</if>
+			<if test="imageDesc != null and imageDesc != ''">
+				#{imageDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="appId != null">
+				#{appId,jdbcType=INTEGER},
+			</if>
+			<if test="imagePort != null and imagePort != ''">
+				#{imagePort,jdbcType=VARCHAR},
+			</if>
+			<if test="imageCreatetime != null ">
+				#{imageCreatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="imageCreator != null ">
+				#{imageCreator,jdbcType=INTEGER},
+			</if>
+			<if test="tenantId !=null ">
+				#{tenantId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="restoreImage" parameterType="com.cmbc.devops.entity.Image">
+		update dop_image
+		<set>
+			<if test="imageType != null and imageType != ''">
+				IMAGE_TYPE = #{imageType,jdbcType=VARCHAR}, APP_ID=NULL,
+			</if>
+			<if test="imageStatus != null ">
+				IMAGE_STATUS = #{imageStatus,jdbcType=TINYINT},
+			</if>
+		</set>
+		where IMAGE_ID = #{imageId,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateImage" parameterType="com.cmbc.devops.entity.Image">
+		update dop_image
+		<set>
+			<if test="imageUuid != null and imageUuid != ''">
+				IMAGE_UUID = #{imageUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="imageStatus != null ">
+				IMAGE_STATUS = #{imageStatus,jdbcType=TINYINT},
+			</if>
+			<if test="imageName != null and imageName != ''">
+				IMAGE_NAME = #{imageName,jdbcType=VARCHAR},
+			</if>
+			<if test="imageTag != null and imageTag != ''">
+				IMAGE_TAG = #{imageTag,jdbcType=VARCHAR},
+			</if>
+			<if test="imageSize != null ">
+				IMAGE_SIZE = #{imageSize,jdbcType=VARCHAR},
+			</if>
+			<if test="imageDesc != null and imageDesc != ''">
+				IMAGE_DESC = #{imageDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="imageType != null and imageType != ''">
+				IMAGE_TYPE = #{imageType,jdbcType=VARCHAR},
+			</if>
+			<if test="appId != null ">
+				APP_ID = #{appId,jdbcType=INTEGER},
+			</if>
+			<if test="imagePort != null and imagePort != ''">
+				IMAGE_PORT = #{imagePort,jdbcType=VARCHAR},
+			</if>
+			<if test="imageCreatetime != null ">
+				IMAGE_CREATETIME = #{imageCreatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="imageCreator != null ">
+				IMAGE_CREATOR = #{imageCreator,jdbcType=INTEGER},
+			</if>
+		</set>
+		where IMAGE_ID = #{imageId,jdbcType=INTEGER}
+	</update>
+	<update id="changeStatus" parameterType="java.util.List">
+		update dop_image
+		<set>
+			IMAGE_STATUS='0'
+		</set>
+		where IMAGE_ID in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+</mapper>
