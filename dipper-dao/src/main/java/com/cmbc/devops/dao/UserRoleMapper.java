@@ -3,63 +3,62 @@ package com.cmbc.devops.dao;
 import java.util.List;
 
 import com.cmbc.devops.entity.UserRole;
-import com.cmbc.devops.exception.SqlException;
 
 public interface UserRoleMapper {
 	
 	/**
 	 * @param userRole
 	 * @return
-	 * @throws SqlException
+	 * @throws Exception
 	 */
-	public List<UserRole> selectAll(UserRole userRole) throws SqlException;
+	public List<UserRole> selectAll(UserRole userRole) throws Exception;
 	
 	/**
 	 * @param id
 	 * @return
-	 * @throws SqlException
+	 * @throws Exception
 	 */
-	public int deleteByPrimaryKey(Integer id) throws SqlException;
+	public int deleteByPrimaryKey(Integer id) throws Exception;
 
 	/**
 	 * @param record
 	 * @return
-	 * @throws SqlException
+	 * @throws Exception
 	 */
-	public int insert(UserRole record) throws SqlException;
+	public int insert(UserRole record) throws Exception;
 
 	/**
 	 * @param record
 	 * @return
-	 * @throws SqlException
+	 * @throws Exception
 	 */
-	public int insertSelective(UserRole record) throws SqlException;
+	public int insertSelective(UserRole record) throws Exception;
 
 	/**
 	 * @param id
 	 * @return
-	 * @throws SqlException
+	 * @throws Exception
 	 */
-	public UserRole selectByPrimaryKey(Integer id) throws SqlException;
+	public UserRole selectByPrimaryKey(Integer id) throws Exception;
 
 	/**
 	 * @param record
 	 * @return
-	 * @throws SqlException
+	 * @throws Exception
 	 */
-	public int updateByPrimaryKeySelective(UserRole record) throws SqlException;
+	public int updateByPrimaryKeySelective(UserRole record) throws Exception;
 
 	/**
 	 * @param record
 	 * @return
-	 * @throws SqlException
+	 * @throws Exception
 	 */
-	public int updateByPrimaryKey(UserRole record) throws SqlException;
+	public int updateByPrimaryKey(UserRole record) throws Exception;
 	
 	/**
 	 * @param userId
 	 * @return
-	 * @throws SqlException
+	 * @throws Exception
 	 */
-	public int deleteByUserId(Integer userId) throws SqlException;
+	public int deleteByUserId(Integer userId) throws Exception;
 }

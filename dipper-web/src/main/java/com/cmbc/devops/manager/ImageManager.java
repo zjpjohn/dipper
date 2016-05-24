@@ -27,7 +27,6 @@ import com.cmbc.devops.entity.Host;
 import com.cmbc.devops.entity.Image;
 import com.cmbc.devops.entity.RegImage;
 import com.cmbc.devops.entity.Registry;
-import com.cmbc.devops.exception.SqlException;
 import com.cmbc.devops.message.MessagePush;
 import com.cmbc.devops.model.ImageModel;
 import com.cmbc.devops.model.RemoteImgModel;
@@ -753,7 +752,7 @@ public class ImageManager {
 			List<RegImage> regImgList = null;
 			try {
 				regImgList = regImageMapper.selectAll(selRegImg);
-			} catch (SqlException e1) {
+			} catch (Exception e1) {
 				LOGGER.error("load regimg info by imageId [" + selImageId + "] falied!", e1);
 				return new Result(false, "通过镜像ID(" + selImageId + ")查询镜像仓库对应信息失败！");
 			}
@@ -1211,7 +1210,7 @@ public class ImageManager {
 				return new Result(false, "镜像没有包含相应的仓库信息，请检查！");
 			}
 			regImg = riList.get(0);
-		} catch (SqlException e2) {
+		} catch (Exception e2) {
 			LOGGER.info("通过镜像(ID:" + imageId + ")获取对应仓库信息失败！", e2);
 			return new Result(false, "通过镜像(ID:" + imageId + ")获取对应仓库信息失败！");
 		}

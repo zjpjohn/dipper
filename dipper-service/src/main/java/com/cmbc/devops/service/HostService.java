@@ -5,7 +5,6 @@ import java.util.List;
 import com.alibaba.fastjson.JSONObject;
 import com.cmbc.devops.bean.GridBean;
 import com.cmbc.devops.entity.Host;
-import com.cmbc.devops.exception.SqlException;
 import com.cmbc.devops.model.HostModel;
 
 /**
@@ -203,9 +202,9 @@ public interface HostService {
 	 * 
 	 * @param id
 	 * @return
-	 * @throws SqlException
+	 * @throws Exception
 	 */
-	public abstract List<Host> getListBySoftId(Integer id) throws SqlException;
+	public abstract List<Host> getListBySoftId(Integer id) throws Exception;
 
 	/** 批量更新，将主机节点划入到集群中 */
 	public Integer updateHostInCluster(Integer clusterId, List<Integer> hostIds) throws Exception;

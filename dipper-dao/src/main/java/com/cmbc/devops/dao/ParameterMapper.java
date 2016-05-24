@@ -2,7 +2,6 @@ package com.cmbc.devops.dao;
 
 import java.util.List;
 import com.cmbc.devops.entity.Parameter;
-import com.cmbc.devops.exception.SqlException;
 
 public interface ParameterMapper {
 
@@ -11,64 +10,64 @@ public interface ParameterMapper {
 	 * 
 	 * @author mayh
 	 * @return int
-	 * @throws SqlException
+	 * @throws Exception
 	 * @version 1.0 2015年8月19日 insert parameter entity to DB
 	 */
-	public int insertParameter(Parameter record) throws SqlException;
+	public int insertParameter(Parameter record) throws Exception;
 
 	/**
 	 * TODO
 	 * 
 	 * @author mayh
 	 * @return int
-	 * @throws SqlException
+	 * @throws Exception
 	 * @version 1.0 2015年8月19日 delete parameter entity from DB by param id
 	 */
-	public int deleteParameter(Integer paramId) throws SqlException;
+	public int deleteParameter(Integer paramId) throws Exception;
 
 	/**
 	 * @author langzi
 	 * @param list
-	 * @throws SqlException
+	 * @throws Exception
 	 * @version 1.0 2016年3月9日 delete parameter entity from DB by param ids
 	 */
-	public void update(List<Integer> paramIds) throws SqlException;
+	public void update(List<Integer> paramIds) throws Exception;
 
 	/**
 	 * TODO
 	 * 
 	 * @author mayh
 	 * @return int
-	 * @throws SqlException
+	 * @throws Exception
 	 * @version 1.0 2015年8月19日 update parameter entity to DB
 	 */
-	public int updateParameter(Parameter record) throws SqlException;
+	public int updateParameter(Parameter record) throws Exception;
 
 	/**
 	 * TODO
 	 * 
 	 * @author mayh
 	 * @return List<Parameter>
-	 * @throws SqlException
+	 * @throws Exception
 	 * @version 1.0 2015年8月23日 select all parameter entities from DB which meet
 	 *          parameter conditions
 	 */
-	public List<Parameter> selectAll(Parameter record) throws SqlException;
+	public List<Parameter> selectAll(Parameter record) throws Exception;
 
 	/**
 	 * @author langzi
 	 * @param paramName
-	 * @throws SqlException
+	 * @throws Exception
 	 * @version 1.0 2015年10月21日 select parameter entities from DB by parameter
 	 *          name
 	 */
-	public Parameter selectParamByName(Parameter param) throws SqlException;
+	public Parameter selectParamByName(Parameter param) throws Exception;
 
 	/**
 	 * @author langzi
 	 * @param paramId
 	 * @return
-	 * @throws SqlException
+	 * @throws Exception
 	 * @version 1.0 2016年3月9日 select parameter entity from DB by parameter
 	 *          id(primary key)
 	 */

@@ -13,7 +13,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.cmbc.devops.bean.GridBean;
 import com.cmbc.devops.dao.AppMapper;
 import com.cmbc.devops.entity.App;
-import com.cmbc.devops.exception.SqlException;
 import com.cmbc.devops.service.AppService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -230,7 +229,7 @@ public class AppServiceImpl implements AppService {
 		map.put("appId", appId);
 		try {
 			return appMapper.checkAppInEnv(map);
-		} catch (SqlException e) {
+		} catch (Exception e) {
 			logger.error("check application in env error", e);
 			return 1;
 		}
@@ -243,7 +242,7 @@ public class AppServiceImpl implements AppService {
 		map.put("appId", appId);
 		try {
 			return appMapper.checkAppInCluster(map);
-		} catch (SqlException e) {
+		} catch (Exception e) {
 			logger.error("check application in cluster error", e);
 			return 1;
 		}

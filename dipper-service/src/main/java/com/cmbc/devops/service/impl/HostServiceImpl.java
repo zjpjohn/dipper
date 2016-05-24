@@ -22,7 +22,6 @@ import com.cmbc.devops.entity.Cluster;
 import com.cmbc.devops.entity.Host;
 import com.cmbc.devops.entity.HostWithUser;
 import com.cmbc.devops.entity.User;
-import com.cmbc.devops.exception.SqlException;
 import com.cmbc.devops.model.HostModel;
 import com.cmbc.devops.service.HostService;
 import com.github.pagehelper.Page;
@@ -378,7 +377,7 @@ public class HostServiceImpl implements HostService {
 	}
 
 	@Override
-	public List<Host> getListBySoftId(Integer id) throws SqlException {
+	public List<Host> getListBySoftId(Integer id) throws Exception {
 		return hostMapper.getListBySoftId(id);
 	}
 
