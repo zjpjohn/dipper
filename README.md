@@ -1,3 +1,5 @@
-# dipper
+# Name : dipper
+# Copyright : Institute of Software, Chinese Academy of Sciences
+# Authors ： wuheng@otcaix.iscas.ac.cn, chenxiaoxu14@otcaix.iscas.ac.cn
 
-A Project of Container Manager
+Hypervisor and Container Manager
