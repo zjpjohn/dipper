@@ -5,15 +5,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>webside-登录</title>
+<title>跨云计算平台</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Cache-Control" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
 <meta http-equiv="X-UA-Compatible" content="E=edge;chrome=1" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<!-- 
 <meta name="keywords" content="webside,响应式前端解决方案,一站式架构设计,基础功能模块" />
-<meta name="description" content="webside,响应式前端解决方案,一站式架构设计,基础功能模块" />
+<meta name="description" content="webside,响应式前端解决方案,一站式架构设计,基础功能模块" />  
+-->
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <link
 	href="${ctx }/resources/images/webside.ico"
@@ -100,8 +104,7 @@ $(document).ready(function() {
 					<div class="login-container">
 						<div class="center">
 							<h1>
-								<i class="icon-leaf ace-icon  green"></i> <span class="white">WebSide
-									V1.0</span>
+								<i class="icon-leaf ace-icon  green"></i> <span class="white">跨云计算平台v1.0</span>
 							</h1>
 						</div>
 
@@ -147,10 +150,9 @@ $(document).ready(function() {
 														class="ace" /> <span class="lbl"> 记住我</span>
 													</label>
 
-													<button onclick="login();" type="button" 
+													<button onclick="login();" type="button"
 														class="width-35 pull-right btn btn-sm btn-primary">
-														<i class="ace-icon icon-key"></i> <span
-															class="bigger-110">登录</span>
+														<i class="ace-icon icon-key"></i> <span class="bigger-110">登录</span>
 													</button>
 												</div>
 
@@ -159,11 +161,11 @@ $(document).ready(function() {
 										</form>
 
 										<div class="social-or-login center">
-											<span class="bigger-110">第三方帐号登录</span>
+											<span class="bigger-110"></span>
 										</div>
 
 										<div class="space-6"></div>
-
+										<!-- 
 										<div class="social-login center">
 											<a class="btn btn-primary"> <i
 												class="ace-icon icon-qq"></i>
@@ -173,6 +175,7 @@ $(document).ready(function() {
 												class="ace-icon icon-wechat"></i>
 											</a>
 										</div>
+										 -->
 									</div>
 									<!-- /.widget-main -->
 
@@ -180,13 +183,13 @@ $(document).ready(function() {
 										<div>
 											<a href="#" data-target="#forgot-box"
 												class="forgot-password-link"> <i
-												class="ace-icon icon-arrow-left"></i> 忘记密码
+												class="ace-icon icon-arrow-left"></i>
 											</a>
 										</div>
 
 										<div>
 											<a href="#" data-target="#signup-box"
-												class="user-signup-link"> 新用户注册 <i
+												class="user-signup-link"> <i
 												class="ace-icon icon-arrow-right"></i>
 											</a>
 										</div>

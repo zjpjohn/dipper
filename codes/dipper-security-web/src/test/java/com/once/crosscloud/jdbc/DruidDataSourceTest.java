@@ -39,4 +39,5 @@ public class DruidDataSourceTest extends TestCase {
 		String password = ConfigTools.encrypt(ORIGINAL_PASSWORD);
 		assertEquals(password, CRYPTOGRAHIC_PASSWORD);
 	}
+	
 }
