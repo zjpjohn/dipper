@@ -37,7 +37,6 @@
 		<commons-beanutils.version>1.8.3</commons-beanutils.version>
 		<commons-fileupload.version>1.3.1</commons-fileupload.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
-		<!-- Plugin的属性定义 -->
 		<jdk.version>1.8</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -394,7 +393,7 @@
 			</plugin>
 
 			<!-- generate a javadoc -->
-
+                        <!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -415,7 +414,7 @@
 					<docencoding>UTF-8</docencoding>
 					<show>private</show>
 				</configuration>
-			</plugin>
+			</plugin> -->
 
 			<!-- 代码生成 -->
 			<plugin>
