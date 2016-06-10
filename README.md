@@ -10,8 +10,15 @@ ONCECloud Dipper is distributed under the terms of the Apache License, Version 2
 ONCECloud Dipper consists of a set of Java daemons, though it requires and integrates with a number of native system components for databases, messaging and virtualization capabilities.
 
 =====================
+Project description
+- codes: new version
+- deprecated: old version
+- docs: all materials, such as system desgin, and so on.
+- examples: some examples to solve technology issues.
+
+=====================
 Before dipper development, you'd better learn:
-- security:https://git.oschina.net/wjggwm/webside.git
-- view:https://github.com/bopoda/ace
-- view:https://github.com/angular-ui/bootstrap.git(deprecated)
+- security framework:https://git.oschina.net/wjggwm/webside.git
+- ui framework:https://github.com/bopoda/ace
+- ui framework:https://github.com/angular-ui/bootstrap.git(deprecated)
 
