@@ -1,3 +1,18 @@
+/**
+ * Copyright 2016-2016 Institute of Software, Chinese Academy of Sciences.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.once.crosscloud.util;
 
 import java.math.BigDecimal;
@@ -11,11 +26,9 @@ import org.apache.shiro.subject.Subject;
 import com.once.crosscloud.user.model.UserEntity;
 
 /**
- * 
- * <p>Description: 基础工具类</p>
- * <p>Company: 静之殇工作室</p>
- * @author wjggwm
- * @date 2016年1月11日 下午2:27:53
+ * @author wuheng(wuheng@otcaix.iscas.ac.cn)
+ * @date 2016年6月9日
+ *
  */
 public class Common {
 	// 后台访问

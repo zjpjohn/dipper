@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * </p>
  * <p>Company: 静之殇工作室</p>
  * @author wjggwm
- * @date 2016年1月5日 下午5:43:32
  */
 public class LimitRetryHashedMatcher extends HashedCredentialsMatcher {
     private Cache<String, AtomicInteger> passwordRetryCache;
