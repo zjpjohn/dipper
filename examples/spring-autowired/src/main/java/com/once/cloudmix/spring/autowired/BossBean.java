@@ -27,7 +27,7 @@ import com.once.cloudmix.spring.autowired.beans.Car;
  * @see refresh function in class org.springframework.context.support.AbstractApplicationContext
  * 
  * 1. obtainFreshBeanFactory: parse beans.xml
- * 2. finishBeanFactoryInitialization: instance
+ * 2. finishBeanFactoryInitialization: Method.invoke
  * 
  */
 public class BossBean {
