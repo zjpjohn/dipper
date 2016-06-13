@@ -44,7 +44,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
-import com.once.crosscloud.exception.SystemException;
+import com.once.crosscloud.exceptions.SystemException;
 import com.once.crosscloud.models.LoginInfoEntity;
 import com.once.crosscloud.models.ResourceEntity;
 import com.once.crosscloud.models.RoleEntity;

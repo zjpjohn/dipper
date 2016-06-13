@@ -18,7 +18,7 @@ package com.once.crosscloud.services;
 import java.util.List;
 import java.util.Map;
 
-import com.once.crosscloud.exception.ServiceException;
+import com.once.crosscloud.exceptions.ServiceException;
 import com.once.crosscloud.models.UserEntity;
 
 /**

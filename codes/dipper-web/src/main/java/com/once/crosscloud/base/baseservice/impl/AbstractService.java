@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.once.crosscloud.base.basemapper.BaseMapper;
 import com.once.crosscloud.base.baseservice.BaseService;
-import com.once.crosscloud.exception.ServiceException;
+import com.once.crosscloud.exceptions.ServiceException;
 
 public class AbstractService<T, ID extends Serializable> implements BaseService<T, ID> {
 
