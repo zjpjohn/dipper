@@ -1,4 +1,19 @@
-package com.once.crosscloud.role.controller;
+/**
+ * Copyright 2016-2016 Institute of Software, Chinese Academy of Sciences.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.once.crosscloud.controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,8 +23,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import jodd.util.StringUtil;
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -22,19 +36,28 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.once.crosscloud.exception.AjaxException;
 import com.once.crosscloud.exception.SystemException;
-import com.once.crosscloud.role.model.RoleEntity;
-import com.once.crosscloud.role.service.RoleService;
+import com.once.crosscloud.resource.model.ResourceEntity;
+import com.once.crosscloud.resource.service.ResourceService;
 import com.once.crosscloud.util.Common;
+import com.once.crosscloud.util.JSTreeEntity;
 import com.once.crosscloud.util.PageUtil;
 import com.once.crosscloud.util.Pager;
+import com.once.crosscloud.util.Select2Entity;
+import com.once.crosscloud.util.TreeUtil;
 
+/**
+ * @author wuheng(wuheng@otcaix.iscas.ac.cn)
+ * @date   Jun 13, 2016
+ *
+ */
 @Controller
 @Scope("prototype")
-@RequestMapping("/role/")
-public class RoleController {
+@RequestMapping("/resource/")
+public class ResourceController {
 
+	private final static Logger logger = Logger.getLogger(ResourceController.class);
 	@Autowired
-	private RoleService roleService;
+	private ResourceService resourceService;
 	
 	@RequestMapping("listUI.html")
 	public String listUI(Model model, HttpServletRequest request) {
@@ -48,17 +71,18 @@ public class RoleController {
 				page.setOrderByType(request.getParameter("sord"));
 			}
 			model.addAttribute("page", page);
-			return Common.BACKGROUND_PATH + "/role/list";
+			return Common.BACKGROUND_PATH + "/resource/list";
 		}catch(Exception e)
 		{
 			throw new SystemException(e);
 		}
 	}
 	
-	@ResponseBody
+	
 	@RequestMapping("list.html")
+	@ResponseBody
 	public Object list(String dtGridPager) throws Exception{
-		Map<String, Object> parameters = null;
+		Map<String,Object> parameters = null;
 		// 映射Pager对象
 		Pager pager = JSON.parseObject(dtGridPager, Pager.class);
 		// 判断是否包含自定义参数
@@ -66,11 +90,10 @@ public class RoleController {
 		if (parameters.size() < 0) {
 			parameters.put("name", null);
 		}
-		
-		//设置分页，page里面包含了分页信息
-		Page<Object> page = PageHelper.startPage(pager.getNowPage(),pager.getPageSize(), "r_id DESC");
+		// 设置分页，page里面包含了分页信息
+		Page<Object> page = PageHelper.startPage(pager.getNowPage(),pager.getPageSize(), "s_id DESC");
 	
-		List<RoleEntity> list = roleService.queryListByPage(parameters);
+		List<ResourceEntity> list = resourceService.queryListByPage(parameters);
 		parameters.clear();
 		parameters.put("isSuccess", Boolean.TRUE);
 		parameters.put("nowPage", pager.getNowPage());
@@ -81,25 +104,77 @@ public class RoleController {
 		//列表展示数据
 		parameters.put("exhibitDatas", list);
 		return parameters;
-		
+	}
+	
+	
+	@RequestMapping("resourceTree.html")
+	@ResponseBody
+	public Object resourceTree(int roleId) {
+		Map<String,Object> parameter = new HashMap<String,Object>();
+		List<JSTreeEntity> jstreeList = null;
+		try{
+			parameter.put("isHide", 0);
+			//parameter.put("type", 0);
+			parameter.put("roleId", roleId);
+			List<ResourceEntity> list = resourceService.queryResourceList(parameter);
+			jstreeList = new TreeUtil().generateJSTree(list);
+		}
+		catch (Exception e) {
+			jstreeList = new ArrayList<JSTreeEntity>();
+			logger.error(e.getMessage(), e);
+		}
+		return jstreeList;
+	}
+	
+	
+	@RequestMapping("resourceSelectTree.html")
+	@ResponseBody
+	public Object resourceSelectTree() {
+		List<Select2Entity> select2Entity = null;
+		try
+		{
+			Map<String,Object> parameter = new HashMap<String,Object>();
+			List<ResourceEntity> list = resourceService.queryListByPage(parameter);
+			select2Entity = new TreeUtil().getSelectTree(list, null);
+			parameter.clear();
+			parameter.put("items", select2Entity);
+			return parameter;
+		}catch (Exception e) {
+			select2Entity = new ArrayList<Select2Entity>();
+			throw new AjaxException(e);
+		}
 	}
 	
 	
 	@RequestMapping("addUI.html")
-	public String addUI() {
-		return Common.BACKGROUND_PATH + "/role/form";
+	public String addUI(Model model, HttpServletRequest request) {
+		try
+		{
+			List<ResourceEntity> list = resourceService.queryListByPage(new HashMap<String,Object>());
+			List<Select2Entity> select2List = new TreeUtil().getSelectTree(list, null);
+			
+			model.addAttribute("select2List", select2List);
+			return Common.BACKGROUND_PATH + "/resource/form";
+		}catch(Exception e)
+		{
+			throw new SystemException(e);
+		}
 	}
 	
 	@RequestMapping("add.html")
 	@ResponseBody
-	public Object add(RoleEntity roleEntity)
+	public Object add(ResourceEntity resourceEntity)
 	{
 		Map<String, Object> map = new HashMap<String, Object>();
 		try
 		{
-			roleEntity.setCreateTime(new Date());
-			roleEntity.setStatus(0);
-			int result = roleService.insert(roleEntity);
+			resourceEntity.setIsHide(0);
+			resourceEntity.setCreateTime(new Date());
+			if(resourceEntity.getParentId() != null)
+			{
+				resourceEntity.setIcon(null);
+			}
+			int result = resourceService.insert(resourceEntity);
 			if(result > 0)
 			{
 				map.put("success", Boolean.TRUE);
@@ -123,15 +198,20 @@ public class RoleController {
 	public String editUI(Model model, HttpServletRequest request, Long id) {
 		try
 		{
-			RoleEntity roleEntity = roleService.findById(id);
+			ResourceEntity resourceEntity = resourceService.findById(id);
 			PageUtil page = new PageUtil();
 			page.setPageNum(Integer.valueOf(request.getParameter("page")));
 			page.setPageSize(Integer.valueOf(request.getParameter("rows")));
 			page.setOrderByColumn(request.getParameter("sidx"));
 			page.setOrderByType(request.getParameter("sord"));
+			
+			List<ResourceEntity> list = resourceService.queryListByPage(new HashMap<String,Object>());
+			List<Select2Entity> select2List = new TreeUtil().getSelectTree(list, null);
+			
 			model.addAttribute("page", page);
-			model.addAttribute("roleEntity", roleEntity);
-			return Common.BACKGROUND_PATH + "/role/form";
+			model.addAttribute("resourceEntity", resourceEntity);
+			model.addAttribute("select2List", select2List);
+			return Common.BACKGROUND_PATH + "/resource/form";
 		}catch(Exception e)
 		{
 			throw new SystemException(e);
@@ -140,12 +220,16 @@ public class RoleController {
 	
 	@RequestMapping("edit.html")
 	@ResponseBody
-	public Object update(RoleEntity roleEntity)
+	public Object update(ResourceEntity resourceEntity)
 	{
 		Map<String, Object> map = new HashMap<String, Object>();
 		try
 		{
-			int result = roleService.update(roleEntity);
+			if(resourceEntity.getType() == 1)
+			{
+				resourceEntity.setIcon(null);
+			}
+			int result = resourceService.update(resourceEntity);
 			if(result > 0)
 			{
 				map.put("success", Boolean.TRUE);
@@ -176,7 +260,7 @@ public class RoleController {
 			for (String string : roleIds) {
 				list.add(Long.valueOf(string));
 			}
-			int cnt = roleService.deleteBatchById(list);
+			int cnt = resourceService.deleteBatchById(list);
 			if(cnt == list.size())
 			{
 				result.put("success", true);
@@ -196,58 +280,9 @@ public class RoleController {
 	}
 	
 	
-	@RequestMapping("permissionUI.html")
-	public String permissionUI(Model model, HttpServletRequest request, Long id) {
-		try
-		{
-			RoleEntity roleEntity = roleService.findById(id);
-			PageUtil page = new PageUtil();
-			page.setPageNum(Integer.valueOf(request.getParameter("page")));
-			page.setPageSize(Integer.valueOf(request.getParameter("rows")));
-			page.setOrderByColumn(request.getParameter("sidx"));
-			page.setOrderByType(request.getParameter("sord"));
-			model.addAttribute("page", page);
-			model.addAttribute("roleEntity", roleEntity);
-			return Common.BACKGROUND_PATH + "/role/permission";
-		}catch(Exception e)
-		{
-			throw new SystemException(e);
-		}
+	@RequestMapping("icon.html")
+	public String icon() {
+		return Common.BACKGROUND_PATH + "/resource/icon";
 	}
-	
-	
-	@RequestMapping("permission.html")
-	@ResponseBody
-	public Object permission(int roleId, String resourceIds)
-	{
-		Map<String, Object> map = new HashMap<String, Object>();
-		try
-		{
-			List<Integer> list = new ArrayList<Integer>();
-			if(StringUtil.isNotBlank(resourceIds))
-			{
-				for (String id : resourceIds.split(",")) {
-					list.add(Integer.valueOf(id));
-				}
-			}
-			boolean result = roleService.addRolePerm(roleId, list);
-			if(result)
-			{
-				map.put("success", Boolean.TRUE);
-				map.put("data", null);
-				map.put("message", "授权成功");
-			}else
-			{
-				map.put("success", Boolean.FALSE);
-				map.put("data", null);
-				map.put("message", "授权失败");
-			}
-		}catch(Exception e)
-		{
-			throw new AjaxException(e);
-		}
-		return map;
-	}
-	
 	
 }
