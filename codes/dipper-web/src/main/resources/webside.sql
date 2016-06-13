@@ -13,6 +13,8 @@ File Encoding         : 65001
 Date: 2016-03-29 19:07:24
 */
 
+CREATE DATABASE webside;
+
 USE webside;
 
 SET FOREIGN_KEY_CHECKS=0;
