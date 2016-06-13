@@ -1,4 +1,4 @@
-package com.once.crosscloud.exception;
+package com.once.crosscloud.exceptions;
 
 /**
  * 
