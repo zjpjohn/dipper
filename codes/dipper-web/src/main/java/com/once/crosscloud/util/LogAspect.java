@@ -25,8 +25,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.once.crosscloud.loginfo.service.LogInfoService;
 import com.once.crosscloud.models.LogInfoEntity;
+import com.once.crosscloud.services.LogInfoService;
 
 /**
  * 

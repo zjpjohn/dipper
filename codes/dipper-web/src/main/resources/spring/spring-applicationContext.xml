@@ -16,7 +16,7 @@
 
 	<!-- 配置要扫描的包 -->
 	<context:component-scan base-package="com.once.crosscloud.*.dao" />
-	<context:component-scan base-package="com.once.crosscloud.*.service" />
+	<context:component-scan base-package="com.once.crosscloud.services" />
 	<context:component-scan base-package="com.once.crosscloud.util" />
 
 	<!-- 引入其他beans -->
@@ -175,7 +175,7 @@
 	
 	<aop:config>
 		<!-- 配置哪些类的方法进行事务管理:定义在service包或者子包里的任意方法的执行 -->
-		<aop:pointcut id="transactionPointcut" expression="execution(* com.once.crosscloud.*.service..*.*(..))" />
+		<aop:pointcut id="transactionPointcut" expression="execution(* com.once.crosscloud.services..*.*(..))" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="transactionPointcut"/>
 	</aop:config>
 	
@@ -193,7 +193,7 @@
 	<bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">
         <property name="patterns">
             <list>
-                <value>com.once.crosscloud.*.service.*</value>
+                <value>com.once.crosscloud.services.*</value>
                 <value>cn.once.crosscloud.*.mapper.*</value>
             </list>
         </property>

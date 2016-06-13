@@ -11,7 +11,7 @@ import org.apache.shiro.config.Ini;
 import org.springframework.beans.factory.FactoryBean;
 
 import com.once.crosscloud.models.ResourceEntity;
-import com.once.crosscloud.resource.service.ResourceService;
+import com.once.crosscloud.services.ResourceService;
 
 /*********************************************
  * <p>
