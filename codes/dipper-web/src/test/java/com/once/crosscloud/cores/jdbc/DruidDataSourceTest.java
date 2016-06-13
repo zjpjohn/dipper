@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.once.crosscloud.jdbc;
+package com.once.crosscloud.cores.jdbc;
 
 import com.alibaba.druid.filter.config.ConfigTools;
 
