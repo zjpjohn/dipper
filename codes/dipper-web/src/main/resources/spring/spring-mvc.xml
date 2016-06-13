@@ -28,7 +28,7 @@
 		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
 		<property name="formatters">
 			<set>
-				<bean class="com.once.crosscloud.util.DateFormatter"></bean>
+				<bean class="com.once.crosscloud.utils.DateFormatter"></bean>
 			</set>
 		</property>
 	</bean>
@@ -56,7 +56,7 @@
 	<!-- 启动对@AspectJ注解的支持 -->
 	<!--通知spring使用cglib而不是jdk的来生成代理方法 AOP可以拦截到Controller -->
 	<aop:aspectj-autoproxy proxy-target-class="true" />
-	<bean id="logAspect" class="com.once.crosscloud.util.LogAspect" />
+	<bean id="logAspect" class="com.once.crosscloud.utils.LogAspect" />
 
 	<!-- 默认扫描的包路径 -->
 	<!-- 设置只扫描 @Controller注解的Bean,添加 use-default-filters="false",base-package即可配置为如下方式"com.once.crosscloud" -->

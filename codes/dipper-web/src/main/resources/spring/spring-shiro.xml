@@ -9,7 +9,7 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd "
 	default-lazy-init="true">
 	
-	<bean id="credentialsMatcher" class="com.once.crosscloud.shiro.LimitRetryHashedMatcher">
+	<bean id="credentialsMatcher" class="com.once.crosscloud.cores.shiro.LimitRetryHashedMatcher">
 		<!-- hashAlgorithmName必须的，没有默认值。可以有MD5或者SHA-1，如果对密码安全有更高要求可以用SHA-256或者更高。
 		这里使用MD5 storedCredentialsHexEncoded默认是true，此时用的是密码加密用的是Hex编码；false时用Base64编码 
 		hashIterations迭代次数，默认值是1。 -->
@@ -22,7 +22,7 @@
 	</bean>
 	
 	<!--自定义Realm -->
-	<bean id="myRealm" class="com.once.crosscloud.shiro.MyRealm">
+	<bean id="myRealm" class="com.once.crosscloud.cores.shiro.MyRealm">
 		<property name="credentialsMatcher" ref="credentialsMatcher" />
 		<!-- 缓存-->
 		<property name="cachingEnabled" value="true" />
@@ -46,10 +46,10 @@
 	</bean>
 	
 	<!-- 用户过滤器,将用户信息放入request中 -->
-	<bean id="sysUserFilter" class="com.once.crosscloud.shiro.filter.SysUserFilter"/>
+	<bean id="sysUserFilter" class="com.once.crosscloud.cores.shiro.filter.SysUserFilter"/>
 	
 	<!-- 用户登录数控制,超过最大回话数会强制退出 -->
-	 <bean id="kickoutSessionFilter" class="com.once.crosscloud.shiro.filter.KickoutSessionFilter">
+	 <bean id="kickoutSessionFilter" class="com.once.crosscloud.cores.shiro.filter.KickoutSessionFilter">
         <property name="cacheManager" ref="shiroCacheManager"/>
         <property name="sessionManager" ref="shiroSessionManager"/>
         <property name="kickoutAfter" value="false"/>
@@ -90,7 +90,7 @@
 	</bean>
 	
 	<!--自定义filterChainDefinitionMap -->
-	<bean id="chainDefinitionSectionMetaSource" class="com.once.crosscloud.shiro.ChainDefinitionSectionMetaSource">
+	<bean id="chainDefinitionSectionMetaSource" class="com.once.crosscloud.cores.shiro.ChainDefinitionSectionMetaSource">
 		<property name="filterChainDefinitions">
 			<value>
 			/resources/** = anon
@@ -154,7 +154,7 @@
 	-->
 	
 	<!--shiro缓存管理器 -->
-	<bean id="shiroCacheManager" class="com.once.crosscloud.shiro.ShiroCacheManagerWrapper" >
+	<bean id="shiroCacheManager" class="com.once.crosscloud.cores.shiro.ShiroCacheManagerWrapper" >
 	<property name="cacheManager" ref="ehCacheManager"/>
 	</bean>
 	

@@ -17,7 +17,7 @@
 	<!-- 配置要扫描的包 -->
 	<context:component-scan base-package="com.once.crosscloud.*.dao" />
 	<context:component-scan base-package="com.once.crosscloud.services" />
-	<context:component-scan base-package="com.once.crosscloud.util" />
+	<context:component-scan base-package="com.once.crosscloud.utils" />
 
 	<!-- 引入其他beans -->
 	<!-- <import resource="xxx.xml"/> -->
@@ -78,7 +78,7 @@
 	</bean>
 
 	<!-- 配置数据源,使用 druid -->
-	<bean id="dataSource" class="com.once.crosscloud.jdbc.DruidDataSource"
+	<bean id="dataSource" class="com.once.crosscloud.cores.jdbc.DruidDataSource"
 		init-method="init" destroy-method="close">
 		<!-- 基本属性 url、user、password -->
 		<property name="driverClassName" value="${jdbc.driver}" />
@@ -161,10 +161,10 @@
 	 -->
 	<tx:advice id="txAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
-            <tx:method name="insert*" propagation="REQUIRED" read-only="false" isolation="READ_COMMITTED" rollback-for="com.once.crosscloud.exception.WebsideServiceException"/>
-            <tx:method name="update*" propagation="REQUIRED" read-only="false" isolation="READ_COMMITTED" rollback-for="com.once.crosscloud.exception.WebsideServiceException" />
-            <tx:method name="delete*" propagation="REQUIRED" read-only="false" isolation="READ_COMMITTED" rollback-for="com.once.crosscloud.exception.WebsideServiceException" />
-            <tx:method name="add*" propagation="REQUIRED" read-only="false" isolation="READ_COMMITTED" rollback-for="com.once.crosscloud.exception.WebsideServiceException" />
+            <tx:method name="insert*" propagation="REQUIRED" read-only="false" isolation="READ_COMMITTED" rollback-for="com.once.crosscloud.exceptions.WebsideServiceException"/>
+            <tx:method name="update*" propagation="REQUIRED" read-only="false" isolation="READ_COMMITTED" rollback-for="com.once.crosscloud.exceptions.WebsideServiceException" />
+            <tx:method name="delete*" propagation="REQUIRED" read-only="false" isolation="READ_COMMITTED" rollback-for="com.once.crosscloud.exceptions.WebsideServiceException" />
+            <tx:method name="add*" propagation="REQUIRED" read-only="false" isolation="READ_COMMITTED" rollback-for="com.once.crosscloud.exceptions.WebsideServiceException" />
 
             <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
             <tx:method name="query*" propagation="SUPPORTS" read-only="true"/>
