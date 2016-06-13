@@ -15,16 +15,16 @@
  */
 package com.once.crosscloud.util;
 
-import org.apache.shiro.codec.Base64; 
-import org.apache.shiro.codec.H64; 
-import org.apache.shiro.codec.Hex; 
-import org.apache.shiro.crypto.AesCipherService; 
-import org.apache.shiro.crypto.SecureRandomNumberGenerator; 
+import java.security.Key;
+
+import org.apache.shiro.codec.Base64;
+import org.apache.shiro.codec.H64;
+import org.apache.shiro.codec.Hex;
+import org.apache.shiro.crypto.AesCipherService;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Md5Hash;
 
-import com.once.crosscloud.user.model.UserEntity;
-
-import java.security.Key; 
+import com.once.crosscloud.models.UserEntity; 
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)

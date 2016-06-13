@@ -16,7 +16,7 @@
 		r_update_time
 	</sql>
 
-	<resultMap id="roleMap" type="com.once.crosscloud.role.model.RoleEntity">
+	<resultMap id="roleMap" type="com.once.crosscloud.models.RoleEntity">
 		<id property="id" column="r_id"/>
 		<result property="name" column="r_name"/>
 		<result property="key" column="r_key"/>
@@ -24,7 +24,7 @@
 		<result property="description" column="r_description"/>
 		<result property="createTime" column="r_create_time"/>
 		<result property="updateTime" column="r_update_time"/>
-		<collection property="userList" column="id" ofType="com.once.crosscloud.user.model.UserEntity">
+		<collection property="userList" column="id" ofType="com.once.crosscloud.models.UserEntity">
 			<id property="id" column="u_id"/>
 			<result property="userName" column="u_name" />
 			<result property="accountName" column="u_account_name"/>
@@ -101,7 +101,7 @@
 		where r.r_name = #{name}
 	</select>
 	
-	<insert id="insert" parameterType="com.once.crosscloud.role.model.RoleEntity" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="com.once.crosscloud.models.RoleEntity" useGeneratedKeys="true" keyProperty="id">
 		insert ignore into tb_role (
 			r_name,
 			r_key,
@@ -143,7 +143,7 @@
 		where r.r_id = #{id}
 	</select>
 	
-	<update id="update" parameterType="com.once.crosscloud.role.model.RoleEntity" flushCache="true">
+	<update id="update" parameterType="com.once.crosscloud.models.RoleEntity" flushCache="true">
 		update tb_role
 		<set>
 			<if test="name != null and name != ''">

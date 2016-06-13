@@ -18,10 +18,10 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 
+import com.once.crosscloud.models.ResourceEntity;
+import com.once.crosscloud.models.UserEntity;
 import com.once.crosscloud.resource.mapper.ResourceMapper;
-import com.once.crosscloud.resource.model.ResourceEntity;
 import com.once.crosscloud.user.mapper.UserMapper;
-import com.once.crosscloud.user.model.UserEntity;
 
 
 /**

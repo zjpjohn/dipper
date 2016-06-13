@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.once.crosscloud.base.basemapper.BaseMapper;
-import com.once.crosscloud.user.model.UserEntity;
+import com.once.crosscloud.models.UserEntity;
 
 @Repository
 public interface UserMapper extends BaseMapper<UserEntity, Long>{

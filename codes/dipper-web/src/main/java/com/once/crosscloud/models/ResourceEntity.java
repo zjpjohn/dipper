@@ -1,4 +1,4 @@
-package com.once.crosscloud.resource.model;
+package com.once.crosscloud.models;
 
 import java.util.ArrayList;
 import java.util.Date;

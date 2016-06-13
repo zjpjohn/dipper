@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.once.crosscloud.base.basemapper.BaseMapper;
-import com.once.crosscloud.resource.model.ResourceEntity;
+import com.once.crosscloud.models.ResourceEntity;
 
 @Repository
 public interface ResourceMapper extends BaseMapper<ResourceEntity, Long>{

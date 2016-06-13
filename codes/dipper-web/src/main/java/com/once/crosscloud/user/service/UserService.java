@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.once.crosscloud.exception.ServiceException;
-import com.once.crosscloud.user.model.UserEntity;
+import com.once.crosscloud.models.UserEntity;
 
 public interface UserService {
 

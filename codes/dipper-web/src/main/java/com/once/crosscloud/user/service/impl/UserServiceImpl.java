@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.once.crosscloud.base.baseservice.impl.AbstractService;
 import com.once.crosscloud.exception.ServiceException;
+import com.once.crosscloud.models.UserEntity;
 import com.once.crosscloud.user.mapper.UserMapper;
-import com.once.crosscloud.user.model.UserEntity;
 import com.once.crosscloud.user.service.UserService;
 import com.once.crosscloud.util.EmailUtil;
 

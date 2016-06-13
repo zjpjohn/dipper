@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.once.crosscloud.resource.model.ResourceEntity;
+import com.once.crosscloud.models.ResourceEntity;
 
 import jodd.util.StringUtil;
 

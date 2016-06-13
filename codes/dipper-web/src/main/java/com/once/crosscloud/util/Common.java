@@ -23,7 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
-import com.once.crosscloud.user.model.UserEntity;
+import com.once.crosscloud.models.UserEntity;
+
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)

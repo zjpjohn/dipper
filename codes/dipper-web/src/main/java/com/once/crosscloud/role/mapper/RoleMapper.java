@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.once.crosscloud.base.basemapper.BaseMapper;
-import com.once.crosscloud.role.model.RoleEntity;
+import com.once.crosscloud.models.RoleEntity;
 
 @Repository
 public interface RoleMapper extends BaseMapper<RoleEntity, Long>{

@@ -132,7 +132,7 @@
 		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
 		<!-- 匹配Mapper映射文件 -->
 		<property name="mapperLocations" value="classpath:mybatis/mapper/sqlmap-mapping-*.xml" />
-	    <property name="typeAliasesPackage" value="com.once.crosscloud.*.model" />
+	    <property name="typeAliasesPackage" value="com.once.crosscloud.models" />
 	</bean>
 
 	<!-- 通过扫描的模式,不需要配置SqlSessionFactory 或 SqlSessionTemplate,MapperScannerConfigurer 将会创建 MapperFactoryBean,之后自动装配;

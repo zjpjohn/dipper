@@ -30,7 +30,7 @@
 		u_create_time
 	</sql>
 
-	<resultMap id="userMap" type="com.once.crosscloud.user.model.UserEntity">
+	<resultMap id="userMap" type="com.once.crosscloud.models.UserEntity">
 		<id property="id" column="u_id"/>
 		<result property="userName" column="u_name" />
 		<result property="accountName" column="u_account_name"/>
@@ -42,7 +42,7 @@
 		<result property="creatorName" column="u_creator_name"/>
 		<result property="createTime" column="u_create_time"/>
 		<result property="updateTime" column="u_update_time"/>
-		<association property="role" column="id" javaType="com.once.crosscloud.role.model.RoleEntity">
+		<association property="role" column="id" javaType="com.once.crosscloud.models.RoleEntity">
 			<id property="id" column="r_id"/>
 			<result property="name" column="r_name"/>
 			<result property="key" column="r_key"/>
@@ -51,7 +51,7 @@
 			<result property="createTime" column="r_create_time"/>
 			<result property="updateTime" column="r_update_time"/>
 		</association>
-		<association property="userInfo" column="id" javaType="com.once.crosscloud.user.model.UserInfoEntity">
+		<association property="userInfo" column="id" javaType="com.once.crosscloud.models.UserInfoEntity">
 			<id property="id" column="u_id"/>
 			<result property="sex" column="u_sex"/>
 			<result property="birthday" column="u_birthday"/>
@@ -178,7 +178,7 @@
 		 -->
 	</select>
 	
-	<insert id="insert" parameterType="com.once.crosscloud.user.model.UserEntity" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="com.once.crosscloud.models.UserEntity" useGeneratedKeys="true" keyProperty="id">
 		insert ignore into tb_user (
 			u_name,
 			u_account_name,
@@ -199,7 +199,7 @@
 			)  
 	</insert>
 	
-	<insert id="insertUserRole" parameterType="com.once.crosscloud.user.model.UserEntity" useGeneratedKeys="true" keyProperty="role.id">
+	<insert id="insertUserRole" parameterType="com.once.crosscloud.models.UserEntity" useGeneratedKeys="true" keyProperty="role.id">
 		insert ignore into tb_role_user (
 			u_id,
 			r_id,
@@ -212,7 +212,7 @@
 			)  
 	</insert>
 	
-	<update id="update" parameterType="com.once.crosscloud.user.model.UserEntity" flushCache="true">
+	<update id="update" parameterType="com.once.crosscloud.models.UserEntity" flushCache="true">
 		update tb_user
 		<set>
 				u_name = #{userName},
@@ -238,7 +238,7 @@
 		where u_id = ${id}
 	</update>
 	
-	<update id="updateUserRole" parameterType="com.once.crosscloud.user.model.UserEntity" flushCache="true">
+	<update id="updateUserRole" parameterType="com.once.crosscloud.models.UserEntity" flushCache="true">
 		update tb_role_user
 		set r_id = ${role.id}
 		where u_id = ${id}
@@ -263,7 +263,7 @@
 	</delete>
 	
 	
-	<insert id="insertUserInfo" parameterType="com.once.crosscloud.user.model.UserEntity" useGeneratedKeys="true" keyProperty="userInfo.id">
+	<insert id="insertUserInfo" parameterType="com.once.crosscloud.models.UserEntity" useGeneratedKeys="true" keyProperty="userInfo.id">
 		insert ignore into tb_user_info (
 			<include refid="userInfoAttributes"/>
 			)   
@@ -279,7 +279,7 @@
 	</insert>
 	
 	
-	<update id="updateUserInfo" parameterType="com.once.crosscloud.user.model.UserEntity" flushCache="true">
+	<update id="updateUserInfo" parameterType="com.once.crosscloud.models.UserEntity" flushCache="true">
 		update tb_user_info set
 		u_sex = #{userInfo.sex},
 		u_birthday = #{userInfo.birthday},

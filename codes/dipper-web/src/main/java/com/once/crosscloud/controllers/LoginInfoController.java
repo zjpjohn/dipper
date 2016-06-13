@@ -29,8 +29,8 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.once.crosscloud.exception.SystemException;
-import com.once.crosscloud.logininfo.model.LoginInfoEntity;
 import com.once.crosscloud.logininfo.service.LoginInfoService;
+import com.once.crosscloud.models.LoginInfoEntity;
 import com.once.crosscloud.util.Common;
 import com.once.crosscloud.util.Pager;
 

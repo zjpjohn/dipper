@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.once.crosscloud.base.baseservice.impl.AbstractService;
 import com.once.crosscloud.logininfo.mapper.LoginInfoMapper;
-import com.once.crosscloud.logininfo.model.LoginInfoEntity;
 import com.once.crosscloud.logininfo.service.LoginInfoService;
+import com.once.crosscloud.models.LoginInfoEntity;
 
 @Service("loginInfoService")
 public class LoginInfoServiceImpl extends AbstractService<LoginInfoEntity, Long> implements LoginInfoService{

@@ -3,7 +3,8 @@ package com.once.crosscloud.loginfo.service;
 import java.util.List;
 import java.util.Map;
 
-import com.once.crosscloud.loginfo.model.LogInfoEntity;
+import com.once.crosscloud.models.LogInfoEntity;
+
 
 public interface LogInfoService {
 

@@ -23,8 +23,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import jodd.util.StringUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -37,11 +35,13 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.once.crosscloud.exception.AjaxException;
 import com.once.crosscloud.exception.SystemException;
-import com.once.crosscloud.role.model.RoleEntity;
+import com.once.crosscloud.models.RoleEntity;
 import com.once.crosscloud.role.service.RoleService;
 import com.once.crosscloud.util.Common;
 import com.once.crosscloud.util.PageUtil;
 import com.once.crosscloud.util.Pager;
+
+import jodd.util.StringUtil;
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)

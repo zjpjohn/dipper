@@ -1,10 +1,9 @@
-package com.once.crosscloud.role.model;
+package com.once.crosscloud.models;
 
 import java.util.Date;
 import java.util.List;
 
 import com.once.crosscloud.base.basemodel.BaseEntity;
-import com.once.crosscloud.user.model.UserEntity;
 
 public class RoleEntity extends BaseEntity {
 

@@ -3,7 +3,8 @@ package com.once.crosscloud.resource.service;
 import java.util.List;
 import java.util.Map;
 
-import com.once.crosscloud.resource.model.ResourceEntity;
+import com.once.crosscloud.models.ResourceEntity;
+
 
 public interface ResourceService{
 

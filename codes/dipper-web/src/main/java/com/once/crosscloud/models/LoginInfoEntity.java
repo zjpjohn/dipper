@@ -1,4 +1,4 @@
-package com.once.crosscloud.logininfo.model;
+package com.once.crosscloud.models;
 
 import java.util.Date;
 

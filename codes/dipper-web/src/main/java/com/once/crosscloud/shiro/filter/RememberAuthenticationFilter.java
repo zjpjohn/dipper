@@ -7,7 +7,8 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 
-import com.once.crosscloud.user.model.UserEntity;
+import com.once.crosscloud.models.UserEntity;
+
 
 public class RememberAuthenticationFilter extends FormAuthenticationFilter {
 

@@ -3,7 +3,8 @@ package com.once.crosscloud.role.service;
 import java.util.List;
 import java.util.Map;
 
-import com.once.crosscloud.role.model.RoleEntity;
+import com.once.crosscloud.models.RoleEntity;
+
 
 public interface RoleService {
 

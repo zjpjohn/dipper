@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.config.Ini;
 import org.springframework.beans.factory.FactoryBean;
 
-import com.once.crosscloud.resource.model.ResourceEntity;
+import com.once.crosscloud.models.ResourceEntity;
 import com.once.crosscloud.resource.service.ResourceService;
 
 /*********************************************

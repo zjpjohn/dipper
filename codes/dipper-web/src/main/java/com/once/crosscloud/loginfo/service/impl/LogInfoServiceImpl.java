@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.once.crosscloud.base.baseservice.impl.AbstractService;
 import com.once.crosscloud.loginfo.mapper.LogInfoMapper;
-import com.once.crosscloud.loginfo.model.LogInfoEntity;
 import com.once.crosscloud.loginfo.service.LogInfoService;
+import com.once.crosscloud.models.LogInfoEntity;
 
 @Service("logInfoService")
 public class LogInfoServiceImpl extends AbstractService<LogInfoEntity, Long> implements LogInfoService{

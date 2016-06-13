@@ -15,7 +15,7 @@
 		l_create_time
 	</sql>
 
-	<resultMap id="logInfoMap" type="com.once.crosscloud.loginfo.model.LogInfoEntity">
+	<resultMap id="logInfoMap" type="com.once.crosscloud.models.LogInfoEntity">
 		<id property="id" column="l_id"/>
 		<result property="userId" column="u_id" />
 		<result property="accountName" column="l_account_name"/>
@@ -35,7 +35,7 @@
 		</where>
 	</select>
 	
-	<insert id="insert" parameterType="com.once.crosscloud.loginfo.model.LogInfoEntity">
+	<insert id="insert" parameterType="com.once.crosscloud.models.LogInfoEntity">
 		insert ignore into tb_log_info (
 			u_id,
 			l_account_name,

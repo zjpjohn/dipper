@@ -14,7 +14,7 @@
 		l_login_time
 	</sql>
 
-	<resultMap id="loginInfoMap" type="com.once.crosscloud.logininfo.model.LoginInfoEntity">
+	<resultMap id="loginInfoMap" type="com.once.crosscloud.models.LoginInfoEntity">
 		<id property="id" column="l_id"/>
 		<result property="userId" column="u_id" />
 		<result property="accountName" column="u_account_name"/>
@@ -40,7 +40,7 @@
 		where u_account_name = #{name}
 	</select>
 	
-	<insert id="insert" parameterType="com.once.crosscloud.logininfo.model.LoginInfoEntity" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="com.once.crosscloud.models.LoginInfoEntity" useGeneratedKeys="true" keyProperty="id">
 		insert ignore into tb_login_info (
 			u_id,
 			u_account_name,

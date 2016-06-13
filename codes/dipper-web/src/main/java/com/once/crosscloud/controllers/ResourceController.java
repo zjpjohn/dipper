@@ -36,7 +36,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.once.crosscloud.exception.AjaxException;
 import com.once.crosscloud.exception.SystemException;
-import com.once.crosscloud.resource.model.ResourceEntity;
+import com.once.crosscloud.models.ResourceEntity;
 import com.once.crosscloud.resource.service.ResourceService;
 import com.once.crosscloud.util.Common;
 import com.once.crosscloud.util.JSTreeEntity;
