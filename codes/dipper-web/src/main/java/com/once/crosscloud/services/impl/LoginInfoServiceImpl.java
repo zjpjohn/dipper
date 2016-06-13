@@ -19,7 +19,7 @@ package com.once.crosscloud.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.once.crosscloud.base.baseservice.impl.AbstractService;
+import com.once.crosscloud.cores.base.baseservice.impl.AbstractService;
 import com.once.crosscloud.mappers.LoginInfoMapper;
 import com.once.crosscloud.models.LoginInfoEntity;
 import com.once.crosscloud.services.LoginInfoService;

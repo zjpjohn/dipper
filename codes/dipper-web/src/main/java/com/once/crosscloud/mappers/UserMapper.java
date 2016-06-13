@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.once.crosscloud.base.basemapper.BaseMapper;
+import com.once.crosscloud.cores.base.basemapper.BaseMapper;
 import com.once.crosscloud.models.UserEntity;
 
 /**

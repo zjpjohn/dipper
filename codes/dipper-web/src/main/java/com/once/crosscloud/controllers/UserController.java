@@ -43,11 +43,11 @@ import com.once.crosscloud.models.UserEntity;
 import com.once.crosscloud.models.UserInfoEntity;
 import com.once.crosscloud.services.RoleService;
 import com.once.crosscloud.services.UserService;
-import com.once.crosscloud.util.Common;
-import com.once.crosscloud.util.EndecryptUtils;
-import com.once.crosscloud.util.PageUtil;
-import com.once.crosscloud.util.Pager;
-import com.once.crosscloud.util.RandomUtil;
+import com.once.crosscloud.utils.Common;
+import com.once.crosscloud.utils.EndecryptUtils;
+import com.once.crosscloud.utils.PageUtil;
+import com.once.crosscloud.utils.Pager;
+import com.once.crosscloud.utils.RandomUtil;
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)

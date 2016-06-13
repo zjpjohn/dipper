@@ -27,7 +27,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.once.crosscloud.exceptions.AjaxException;
 import com.once.crosscloud.exceptions.SystemException;
-import com.once.crosscloud.util.Common;
+import com.once.crosscloud.utils.Common;
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)

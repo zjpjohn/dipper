@@ -20,12 +20,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.once.crosscloud.base.baseservice.impl.AbstractService;
+import com.once.crosscloud.cores.base.baseservice.impl.AbstractService;
 import com.once.crosscloud.exceptions.ServiceException;
 import com.once.crosscloud.mappers.UserMapper;
 import com.once.crosscloud.models.UserEntity;
 import com.once.crosscloud.services.UserService;
-import com.once.crosscloud.util.EmailUtil;
+import com.once.crosscloud.utils.EmailUtil;
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)

@@ -18,7 +18,7 @@ package com.once.crosscloud.models;
 import java.util.Date;
 import java.util.List;
 
-import com.once.crosscloud.base.basemodel.BaseEntity;
+import com.once.crosscloud.cores.base.basemodel.BaseEntity;
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)

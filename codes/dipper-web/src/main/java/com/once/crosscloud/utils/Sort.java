@@ -13,19 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.once.crosscloud.mappers;
-
-import org.springframework.stereotype.Repository;
-
-import com.once.crosscloud.cores.base.basemapper.BaseMapper;
-import com.once.crosscloud.models.LoginInfoEntity;
+package com.once.crosscloud.utils;
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)
- * @date   Jun 13, 2016
- *
+ * @date   Jun 9, 2016
  */
-@Repository
-public interface LoginInfoMapper extends BaseMapper<LoginInfoEntity, Long> {
+public class Sort {
+	
+	/**
+	 * 字段
+	 */
+	private String field;
+	
+	/**
+	 * 排序逻辑
+	 */
+	private String logic;
 
+	public String getField() {
+		return field;
+	}
+
+	public void setField(String field) {
+		this.field = field;
+	}
+
+	public String getLogic() {
+		return logic;
+	}
+
+	public void setLogic(String logic) {
+		this.logic = logic;
+	}
+	
 }

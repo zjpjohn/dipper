@@ -37,9 +37,9 @@ import com.once.crosscloud.exceptions.AjaxException;
 import com.once.crosscloud.exceptions.SystemException;
 import com.once.crosscloud.models.RoleEntity;
 import com.once.crosscloud.services.RoleService;
-import com.once.crosscloud.util.Common;
-import com.once.crosscloud.util.PageUtil;
-import com.once.crosscloud.util.Pager;
+import com.once.crosscloud.utils.Common;
+import com.once.crosscloud.utils.PageUtil;
+import com.once.crosscloud.utils.Pager;
 
 import jodd.util.StringUtil;
 

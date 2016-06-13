@@ -31,8 +31,8 @@ import com.github.pagehelper.PageHelper;
 import com.once.crosscloud.exceptions.SystemException;
 import com.once.crosscloud.models.LoginInfoEntity;
 import com.once.crosscloud.services.LoginInfoService;
-import com.once.crosscloud.util.Common;
-import com.once.crosscloud.util.Pager;
+import com.once.crosscloud.utils.Common;
+import com.once.crosscloud.utils.Pager;
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)

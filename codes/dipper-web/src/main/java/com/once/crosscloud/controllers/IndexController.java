@@ -53,8 +53,8 @@ import com.once.crosscloud.services.LoginInfoService;
 import com.once.crosscloud.services.ResourceService;
 import com.once.crosscloud.services.RoleService;
 import com.once.crosscloud.services.UserService;
-import com.once.crosscloud.util.EndecryptUtils;
-import com.once.crosscloud.util.TreeUtil;
+import com.once.crosscloud.utils.EndecryptUtils;
+import com.once.crosscloud.utils.TreeUtil;
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)

@@ -38,12 +38,12 @@ import com.once.crosscloud.exceptions.AjaxException;
 import com.once.crosscloud.exceptions.SystemException;
 import com.once.crosscloud.models.ResourceEntity;
 import com.once.crosscloud.services.ResourceService;
-import com.once.crosscloud.util.Common;
-import com.once.crosscloud.util.JSTreeEntity;
-import com.once.crosscloud.util.PageUtil;
-import com.once.crosscloud.util.Pager;
-import com.once.crosscloud.util.Select2Entity;
-import com.once.crosscloud.util.TreeUtil;
+import com.once.crosscloud.utils.Common;
+import com.once.crosscloud.utils.JSTreeEntity;
+import com.once.crosscloud.utils.PageUtil;
+import com.once.crosscloud.utils.Pager;
+import com.once.crosscloud.utils.Select2Entity;
+import com.once.crosscloud.utils.TreeUtil;
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)

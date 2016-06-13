@@ -13,19 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.once.crosscloud.mappers;
+package com.once.crosscloud.utils;
 
-import org.springframework.stereotype.Repository;
-
-import com.once.crosscloud.cores.base.basemapper.BaseMapper;
-import com.once.crosscloud.models.LoginInfoEntity;
+import java.io.Serializable;
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)
- * @date   Jun 13, 2016
- *
+ * @date   Jun 9, 2016
  */
-@Repository
-public interface LoginInfoMapper extends BaseMapper<LoginInfoEntity, Long> {
+public class Select2Entity implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String id;
+	
+	private String text;
+	
+	private String name;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
 
 }

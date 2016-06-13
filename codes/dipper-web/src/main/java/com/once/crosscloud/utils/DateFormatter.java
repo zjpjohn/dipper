@@ -13,19 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.once.crosscloud.mappers;
+package com.once.crosscloud.utils;
 
-import org.springframework.stereotype.Repository;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
-import com.once.crosscloud.cores.base.basemapper.BaseMapper;
-import com.once.crosscloud.models.LoginInfoEntity;
+import org.springframework.format.Formatter;
 
 /**
  * @author wuheng(wuheng@otcaix.iscas.ac.cn)
- * @date   Jun 13, 2016
- *
+ * @date   Jun 9, 2016
  */
-@Repository
-public interface LoginInfoMapper extends BaseMapper<LoginInfoEntity, Long> {
+public class DateFormatter implements Formatter<Date>{
+
+	@Override
+	public String print(Date object, Locale locale) {
+		return null;
+	}
+
+	@Override
+	public Date parse(String text, Locale locale) throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = null;
+		try {
+			date = format.parse(text);
+		} catch (Exception e) {
+			format = new SimpleDateFormat("yyyy-MM-dd");
+			date = format.parse(text);
+		}
+		return date;
+	}
 
 }
