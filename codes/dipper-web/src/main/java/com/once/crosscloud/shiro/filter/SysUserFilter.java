@@ -7,7 +7,8 @@ import javax.servlet.ServletResponse;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.web.filter.PathMatchingFilter;
 
-import com.once.crosscloud.user.mapper.UserMapper;
+import com.once.crosscloud.mappers.UserMapper;
+
 /**
  * 
  * @author wjggwm

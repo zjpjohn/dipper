@@ -140,7 +140,7 @@
 	注意 bean 的名称是必须的,而不是 bean 的引用,因 此,value 属性在这里替代通常的 ref;
 	扫描目录在com.once.crosscloud.*.mapper目录下，所有的mapper都继承SqlMapper接口， 这样一个bean就可以了 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.once.crosscloud.*.mapper"/>
+		<property name="basePackage" value="com.once.crosscloud.mappers"/>
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
 	</bean>
 
@@ -194,7 +194,6 @@
         <property name="patterns">
             <list>
                 <value>com.once.crosscloud.services.*</value>
-                <value>cn.once.crosscloud.*.mapper.*</value>
             </list>
         </property>
     </bean>

@@ -22,8 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.once.crosscloud.base.baseservice.impl.AbstractService;
+import com.once.crosscloud.mappers.ResourceMapper;
 import com.once.crosscloud.models.ResourceEntity;
-import com.once.crosscloud.resource.mapper.ResourceMapper;
 import com.once.crosscloud.services.ResourceService;
 
 /**

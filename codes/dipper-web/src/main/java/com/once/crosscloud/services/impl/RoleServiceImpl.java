@@ -24,8 +24,8 @@ import org.springframework.stereotype.Service;
 
 import com.once.crosscloud.base.baseservice.impl.AbstractService;
 import com.once.crosscloud.exception.ServiceException;
+import com.once.crosscloud.mappers.RoleMapper;
 import com.once.crosscloud.models.RoleEntity;
-import com.once.crosscloud.role.mapper.RoleMapper;
 import com.once.crosscloud.services.RoleService;
 
 /**
