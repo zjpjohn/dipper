@@ -61,11 +61,6 @@ import com.once.crosscloud.utils.TreeUtil;
  * @date 2016年6月9日
  *
  */
-/**
- * @author wuheng(wuheng@otcaix.iscas.ac.cn)
- * @date   Jun 13, 2016
- *
- */
 @Controller
 @Scope("prototype")
 @RequestMapping(value = "/")
@@ -264,5 +259,4 @@ public class IndexController {
         }
     }
 	
-
 }
