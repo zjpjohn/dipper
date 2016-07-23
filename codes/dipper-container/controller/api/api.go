@@ -292,8 +292,8 @@ func (a *Api) Run() error {
 		// create roles
 		acct := &auth.Account{
 			Username:  "admin",
-			Password:  "shipyard",
-			FirstName: "Shipyard",
+			Password:  "oncecloud",
+			FirstName: "ISCAS",
 			LastName:  "Admin",
 			Roles:     []string{"admin"},
 		}
