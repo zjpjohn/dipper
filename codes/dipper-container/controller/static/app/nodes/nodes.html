@@ -1,0 +1,82 @@
+<div class="ui padded grid">
+<div class="two column row">
+    <div class="left floated column">
+        <div ng-click="vm.refresh()" class="ui small blue labeled icon button">
+            <i class="refresh icon"></i> 刷新
+        </div>
+    </div>
+    <div class="right aligned right floated column">
+        <div class="ui small icon input">
+            <input ng-model="tableFilter" placeholder="主机查询..." reset-field/>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-show="vm.error">
+    <div class="sixteen wide column">
+        <div class="ui error message">
+            <div class="header">错误提示...</div>
+            <p>{{vm.error}}</p>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-show="vm.nodes.length === 0">
+    <div class="column">
+        <div class="ui icon message">
+            <i class="info icon"></i>
+            <div class="content">
+                <div class="header">
+                    主机信息
+                </div>
+                <p>未发现主机信息.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-show="filteredNodes.length>0">
+    <div class="column">
+        <table class="ui sortable celled table" ng-show="vm.nodes">
+            <thead>
+                <tr>
+                    <th>主机名称</th>
+                    <th>地址信息</th>
+                    <th>容器个数</th>
+                    <th>预留CPUs</th>
+                    <th>预留内存</th>
+                    <th>主机标签</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="n in filteredNodes = (vm.nodes | filter:tableFilter)">
+                    <td>{{n.name}}</td>
+                    <td>{{n.addr}}</td>
+                    <td>{{n.containers}}</td>
+                    <td>{{n.reserved_cpus}}</td>
+                    <td>{{n.reserved_memory}}</td>
+                    <td>{{n.labels.join(', ')}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row" ng-show="vm.nodes.length > 0 && filteredNodes.length === 0">
+    <div class="column">
+        <div class="ui icon message">
+            <i class="info icon"></i>
+            <div class="content">
+                <div class="header">
+                    主机信息
+                </div>
+                <p>未查询到主机信息</p>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+$('.ui.sortable.celled.table').tablesort();
+</script>

@@ -1,0 +1,56 @@
+<div class="ui padded grid">
+<div class="row" ng-show="vm.error">
+    <div class="column">
+        <div class="ui error message">
+            <div class="header">错误提示...</div>
+            <p>{{vm.error}}</p>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="column">
+        <div class="ui segment">
+            <div class="ui form" ng-submit="vm.addRegistry()" ng-method="post">
+                <h4 class="ui dividing header">仓库详情</h4>
+                <label>仓库名称</label>
+                <div class="field">
+                    <input type="text" name="name" ng-model="vm.name" placeholder="仓库名称 (i.e. local)">
+                </div>
+                <label>仓库地址</label>
+                <div class="field">
+                    <input type="text" name="addr" ng-model="vm.addr" placeholder="仓库地址 (i.e. http://10.1.2.3:5000)">
+                </div>
+                <div class="ui hidden divider"></div>
+                <div class="ui green submit button">添加仓库</div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+$(function(){
+    $('.ui.form')
+        .form({
+            name: {
+                identifier : 'name',
+                rules: [
+                {
+                    type   : 'empty',
+                    prompt : '请输入仓库名称'
+                }
+                ]
+            },
+            addr: {
+                identifier : 'addr',
+                rules: [
+                {
+                    type   : 'empty',
+                    prompt : '请填写仓库地址'
+                }
+                ]
+            }
+        });
+
+    $('.ui.checkbox').checkbox();
+});
+</script>
